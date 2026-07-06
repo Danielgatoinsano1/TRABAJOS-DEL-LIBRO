@@ -19,6 +19,31 @@
     <h1>Ediciones Fares</h1>
 
     </header>
+    <nav class="w3-bar fcolor-14">
+        <a href="#" class="w3-bar-item w3-button w3-mobile">Principal</a>
+        <div class="w3-container">
+            <button>Libros</button>
+            <div>
+                <a href="#">Educacion Basica</a>
+                <a href="#">I BTP y I  BCH</a>
+                <a href="#">II BTP</a>
+                <a href="#">III BPT</a>
+
+            </div>
+        </div>
+        <div>
+            <button>Inventario</button>
+            <div>
+                <a href="cproducots.php">Crear produco nuevo</a>
+                <a href="#">Consultar y modificar producto</a>
+                <a href="#">Clientes</a>
+                <a href="#">Agregar Inventario</a>
+                <a href="#">Facturar</a>
+                <a href="#">Informacion Libros</a>
+            </div>
+        </div>
+        <a href="#">Contacto</a>
+    </nav>
 </div>
 
 </body>
