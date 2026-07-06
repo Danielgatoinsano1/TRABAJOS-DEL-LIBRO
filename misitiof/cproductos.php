@@ -22,7 +22,7 @@
             <li class="f-desplegable">
                 <a href="#" class="btndesplegable">Inventario</a>
                 <div class="cont-desplegable">
-                    <a href="cproductos.php">Crear producto</a>
+                    <a href="cproductos.php">Crear producto Nuevo</a>
                     <a href="#">Consultar producto</a>
                 </div>
             </li>
