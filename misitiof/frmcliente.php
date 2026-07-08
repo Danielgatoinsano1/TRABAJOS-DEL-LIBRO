@@ -45,23 +45,25 @@
                         placeholder="Dirección"></textarea>
             </div>
 
-            <div class="w3-half">
-                <label for="ctel" class="w3-label f-color-texto"><b>Teléfono residencial</b></label>
-                <input class="w3-input w3-border fcolor-15"
-                    type="tel"
-                    id="ctel"
-                    name="ctelcasa"
-                    placeholder="Teléfono residencial"
-                    required>
-            </div>
+            <div class="w3-row-padding">
+                <div class="w3-half">
+                    <label for="ctel" class="w3-label f-color-texto"><b>Teléfono residencial</b></label>
+                    <input class="w3-input w3-border fcolor-15"
+                        type="tel"
+                        id="ctel"
+                        name="ctelcasa"
+                        placeholder="Teléfono residencial"
+                        required>
+                </div>
 
-            <div class="w3-half">
-                <label for="ccel" class="w3-label f-color-texto"><b>Celular</b></label>
-                <input class="w3-input w3-border fcolor-15"
-                    type="tel"
-                    id="ccel"
-                    name="ccelular"
-                    placeholder="Teléfono celular">
+                <div class="w3-half">
+                    <label for="ccel" class="w3-label f-color-texto"><b>Celular</b></label>
+                    <input class="w3-input w3-border fcolor-15"
+                        type="tel"
+                        id="ccel"
+                        name="ccelular"
+                        placeholder="Teléfono celular">
+                </div>
             </div>
 
             <div class="w3-row-padding">
@@ -73,10 +75,12 @@
                     placeholder="Correo electrónico">
             </div>
 
-            <button class="w3-btn w3-blue-grey w3-section"
-                    name="cguardar">
-                Guardar
-            </button>
+            <div class="w3-container">
+                <button class="w3-btn w3-blue-grey w3-section"
+                        name="cguardar">
+                        Guardar
+                </button>
+            </div>
 
         </form>
 
