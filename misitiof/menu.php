@@ -61,7 +61,3 @@
     </nav>
 
 </div>
-
-</body>
-</html>
-
