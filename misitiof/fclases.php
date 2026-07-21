@@ -14,7 +14,7 @@ class datospersona
 
 
     public function minombre(){
-        return"mi codigo es:" .$this->dcodigo." y mi nombre es: Daniel Martinez: ".this->dnombre. " y direccion es: ".$this->ddireccion;
+        return"mi codigo es: " .$this->dcodigo." y mi nombre es: ".$this->dnombre. " y direccion es: ".$this->ddireccion;
     }
     }
 
