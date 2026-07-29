@@ -1,11 +1,3 @@
-<?php
-$paginaActual = basename($_SERVER['PHP_SELF'] ?? 'index.php');
-
-function claseActiva(string $pagina, string $paginaActual): string
-{
-    return $pagina === $paginaActual ? ' class="vet-activo" aria-current="page"' : '';
-}
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -19,9 +11,9 @@ function claseActiva(string $pagina, string $paginaActual): string
         <div class="w3-container vet-header-contenido">
             <a class="vet-marca" href="index.php">Santuario de Mascotas</a>
             <nav class="vet-navbar" aria-label="Navegación principal">
-                <a href="index.php"<?= claseActiva('index.php', $paginaActual) ?>>Dashboard</a>
-                <a href="frmmascota.php"<?= claseActiva('frmmascota.php', $paginaActual) ?>>Registrar mascota</a>
-                <a href="listar_mascotas.php"<?= claseActiva('listar_mascotas.php', $paginaActual) ?>>Ver mascotas</a>
+                <a href="index.php">Inicio</a>
+                <a href="frmmascota.php">Registrar mascota</a>
+                <a href="listar_mascotas.php">Ver mascotas</a>
             </nav>
         </div>
     </header>
