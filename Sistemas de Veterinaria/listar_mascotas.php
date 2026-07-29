@@ -8,8 +8,8 @@ try {
     $baseDatos = new Conexion();
     $consulta = $baseDatos->obtenerConexion()->prepare(
         'SELECT id, nombre, especie, raza, edad, peso_actual, color_senas, responsable, telefono_emergencia
-         FROM Mascotas
-         ORDER BY id DESC'
+        FROM Mascotas
+        ORDER BY id DESC'
     );
     $consulta->execute();
     $mascotas = $consulta->fetchAll();
