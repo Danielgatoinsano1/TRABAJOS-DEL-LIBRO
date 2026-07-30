@@ -1,27 +1,49 @@
 <?php
-class conexion extends PDO
-{
-    private $tipo_de_base = "mysql";
-    private $host = "localhost";
-    private $nombre_de_base = "sistem_fares";
-    private $usuario = "root";
-    private $contrasena = "";
 
-    public function __construct()
+require_once 'conexionf2.php';
+require_once 'fclases.php';
+
+class modificarcliente extends datospersona
+{
+    const TABLA = 'clientes';
+
+    public function guardar()
     {
-        // Se sobrescribe el método constructor de la clase PDO
-        try {
-            parent::__construct(
-                $this->tipo_de_base .
-                ":dbname=" . $this->nombre_de_base .
-                ";host=" . $this->host .
-                ";charset=utf8",
-                $this->usuario,
-                $this->contrasena
-            );
-        } catch (PDOException $e) {
-            echo "Error al conectar con la base de datos. Detalle: " . $e->getMessage();
-            exit;
-        }
+        $conexion = new Conexion();
+
+        //Preparar la consulta
+        $consulta = $conexion->prepare(
+            'INSERT INTO ' . self::TABLA .
+            ' (nomcli, direcli, telres_cli, telcel_cli, email_cli)
+            VALUES(:nombre, :direccion, :telresidencial, :telcelular, :email)'
+        );
+
+        //Asignar los valores
+        $consulta->bindParam(':nombre', $this->dnombre);
+        $consulta->bindParam(':direccion', $this->ddireccion);
+        $consulta->bindParam(':telresidencial', $this->dtelresi);
+        $consulta->bindParam(':telcelular', $this->dtelcel);
+        $consulta->bindParam(':email', $this->demail);
+
+        $consulta->execute(); //Ejecutar la consulta
+        $conexion = null; //Cerrar conexión
     }
+public static function ConsultarClientes()
+{
+    $conexion = new Conexion();
+
+    $consulta = $conexion->prepare(
+        'SELECT idcli, nomcli FROM ' . self::TABLA .
+        ' ORDER BY nomcli'
+    );
+
+    $consulta->execute();
+
+    $registros = $consulta->fetchAll(PDO::FETCH_OBJ);
+
+    return $registros;
 }
+}
+
+
+?>

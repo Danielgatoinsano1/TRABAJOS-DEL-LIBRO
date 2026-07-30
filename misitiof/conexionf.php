@@ -24,6 +24,9 @@ echo $e->getMessage();
 return null;
 }
  }
-
+$consulta = $conexion->prepare(
+    'SELECT idcli, nomcli FROM ' . self::TABLA .
+    ' ORDER BY nomcli'
+);
 
 ?>

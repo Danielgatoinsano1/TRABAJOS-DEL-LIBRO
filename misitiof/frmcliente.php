@@ -80,12 +80,70 @@
                         name="cguardar">
                         Guardar
                 </button>
+                
             </div>
 
         </form>
 
     </div>
+    
+    <div class="w3-col s6 w3-mobile w3-section">
+    <table class="w3-table w3-table-all w3-hoverable w3-striped">
+        <thead> <!-- Encabezado de la tabla -->
+            <tr class="fcolor-11">
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <?php
+
+            require_once 'manipularcli.php';
+
+            //Crear objeto con todos los datos del cliente
+            $listaclientes = modificarcliente::ConsultarClientes();
+
+            foreach ($listaclientes as $cliente) { ?>
+
+                <tr>
+                    <!-- Mostrar el id del alumno que esta dentro de $cliente -->
+                    <td><?php echo $cliente->idcli; ?></td>
+
+                    <!-- Mostrar el nombre del alumno que esta dentro de $cliente -->
+                    <td><?php echo $cliente->nomcli; ?></td>
+
+                    <td>
+                        <!-- Pasar el id al archivo editcli.php cuando se dé clic
+                        en el botón Editar -->
+                        <a href="editcli.php?idcli=<?php echo $cliente->idcli ?>"
+                        class="w3-btn w3-teal">
+
+                            <!-- Insertar un icono de editar -->
+                            <i class="fas fa-edit"></i>
+                        </a>
+
+                        <!-- Pasar el id al archivo eliminacli.php cuando se dé
+                        clic en el botón Eliminar -->
+                        <a href="eliminacli.php?id=<?php echo $cliente->idcli ?>"
+                        class="w3-btn w3-red">
+
+                            <!-- Insertar un icono de eliminar -->
+                            <i class="fas fa-user-times"></i>
+                        </a>
+                    </td>
+                </tr>
+
+            <?php
+            } //Cerrar el foreach
+            ?>
+
+        </tbody> <!-- Cerrar el cuerpo de la tabla -->
+    </table> <!-- Cerrar la tabla -->
+</div>
 
 </main>
+
 
 <?php require 'pie_pagina.php'; ?>

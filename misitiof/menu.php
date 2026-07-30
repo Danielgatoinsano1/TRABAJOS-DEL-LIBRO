@@ -11,7 +11,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="EstilosCssF/w3.css">
     <link rel="stylesheet" href="EstilosCssF/dcoloresf.css">
-
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
     <!-- JavaScript -->
     <script src="JScript/acciones_script.js"></script>
 </head>
