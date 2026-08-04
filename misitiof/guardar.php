@@ -21,7 +21,7 @@ function filtrofares($dat_fares)
 function guardaimagen()
 {
     if (isset($_POST['cguardar'])) {
-        $vcodigo = ""; //Declarar variable
+        $vcodigo = ""; //Declakrar variable
         if (!empty($_POST["codigo"])) { //Si el campo código es distinto de vacío entonces
             //Almacenar en la variable $vcodigo el valor del código
             //que ingresó el usuario ya filtrado

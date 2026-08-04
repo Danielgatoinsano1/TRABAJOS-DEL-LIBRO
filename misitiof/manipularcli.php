@@ -43,7 +43,48 @@ public static function ConsultarClientes()
 
     return $registros;
 }
+public function ConsultarClientesId()
+{
+    $conexion = new Conexion();
+
+    $consulta = $conexion->prepare(
+        'SELECT * FROM ' . self::TABLA . '
+         WHERE idcli = :codcli'
+    );
+
+    $consulta->bindParam(':codcli', $this->dcodigo);
+    $consulta->execute();
+
+    $registros = $consulta->fetchAll(PDO::FETCH_OBJ);
+
+    $conexion = null;
+
+    return $registros;
 }
 
+public function actualizar()
+{
+    $conexion = new Conexion();
 
-?>
+    $consulta = $conexion->prepare(
+        'UPDATE ' . self::TABLA . '
+        SET nomcli = :nombre,
+            direccli = :direccion,
+            telres_cli = :telresidencial,
+            telcel_cli = :telcelular,
+            email_cli = :email
+        WHERE idcli = :codcli'
+    );
+
+    $consulta->bindParam(':nombre', $this->dnombre);
+    $consulta->bindParam(':direccion', $this->ddireccion);
+    $consulta->bindParam(':telresidencial', $this->dtelresi);
+    $consulta->bindParam(':telcelular', $this->dtelcel);
+    $consulta->bindParam(':email', $this->demail);
+    $consulta->bindParam(':codcli', $this->dcodigo);
+
+    $consulta->execute();
+
+    $conexion = null;
+}
+}
