@@ -86,5 +86,16 @@ public function actualizar()
     $consulta->execute();
 
     $conexion = null;
+
+}
+public function eliminarCliente()
+{
+    $conexion = new Conexion ();
+    //Preparar la Consulta
+    $consulta = $conexion->prepare('DELETE FROM ' . self::TABLA .' where idcli = :codcli');
+    //Asignar los valores
+    $consulta->bindParam(':codcli', $this->dcodigo);
+    $consulta->execute(); //Ejecutar la consulta
+    $conexion = null; //Cerrar conexion
 }
 }
