@@ -29,4 +29,34 @@ class GuardarMascota extends Conexion
             throw new RuntimeException('No se pudo guardar la mascota.', 0, $e);
         }
     }
+
+    public function buscarPorId(int $id): ?array
+    {
+        $consulta = $this->conexion->prepare('SELECT * FROM Mascotas WHERE id = :id');
+        $consulta->execute([':id' => $id]);
+        $mascota = $consulta->fetch();
+        return $mascota === false ? null : $mascota;
+    }
+
+    public function actualizar(int $id, Mascota $mascota): bool
+    {
+        $consulta = $this->conexion->prepare(
+            'UPDATE Mascotas SET nombre=:nombre, especie=:especie, raza=:raza, edad=:edad,
+             peso_actual=:peso_actual, color_senas=:color_senas, responsable=:responsable,
+             telefono_emergencia=:telefono_emergencia WHERE id=:id'
+        );
+        return $consulta->execute([
+            ':id' => $id, ':nombre' => $mascota->getNombre(), ':especie' => $mascota->getEspecie(),
+            ':raza' => $mascota->getRaza(), ':edad' => $mascota->getEdad(),
+            ':peso_actual' => $mascota->getPesoActual(), ':color_senas' => $mascota->getColorSenas(),
+            ':responsable' => $mascota->getResponsable(), ':telefono_emergencia' => $mascota->getTelefonoEmergencia(),
+        ]);
+    }
+
+    public function eliminar(int $id): bool
+    {
+        $consulta = $this->conexion->prepare('DELETE FROM Mascotas WHERE id = :id');
+        $consulta->execute([':id' => $id]);
+        return $consulta->rowCount() > 0;
+    }
 }

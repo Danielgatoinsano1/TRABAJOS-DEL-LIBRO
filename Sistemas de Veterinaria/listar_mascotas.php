@@ -3,6 +3,8 @@ require_once __DIR__ . '/conexion.php';
 
 $mascotas = [];
 $mensajeError = '';
+$mensaje = isset($_GET['mensaje']) ? (string) $_GET['mensaje'] : '';
+$tipo = ($_GET['tipo'] ?? '') === 'exito' ? 'exito' : 'error';
 
 try {
     $baseDatos = new Conexion();
@@ -30,6 +32,10 @@ include __DIR__ . '/menu.php';
     <div class="vet-tarjeta w3-card">
         <h1 class="vet-titulo">Mascotas registradas</h1>
 
+        <?php if ($mensaje !== ''): ?>
+            <div class="<?= $tipo === 'exito' ? 'vet-mensaje-exito' : 'vet-mensaje-error' ?>" role="alert"><?= escapar($mensaje) ?></div>
+        <?php endif; ?>
+
         <?php if ($mensajeError !== ''): ?>
             <div class="vet-mensaje-error" role="alert"><?= escapar($mensajeError) ?></div>
         <?php elseif (count($mascotas) === 0): ?>
@@ -51,6 +57,7 @@ include __DIR__ . '/menu.php';
                             <th>Color/señas</th>
                             <th>Responsable</th>
                             <th>Teléfono</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -65,6 +72,13 @@ include __DIR__ . '/menu.php';
                                 <td><?= escapar($mascota['color_senas']) ?></td>
                                 <td><?= escapar($mascota['responsable']) ?></td>
                                 <td><?= escapar($mascota['telefono_emergencia']) ?></td>
+                                <td>
+                                    <a class="w3-button w3-blue" href="editar_mascota.php?id=<?= escapar($mascota['id']) ?>">Editar</a>
+                                    <form method="post" action="eliminar_mascota.php" style="display:inline" onsubmit="return confirm('¿Seguro que deseas eliminar esta mascota?');">
+                                        <input type="hidden" name="id" value="<?= escapar($mascota['id']) ?>">
+                                        <button class="w3-button w3-red" type="submit" name="eliminar_mascota">Eliminar</button>
+                                    </form>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
