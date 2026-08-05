@@ -98,4 +98,21 @@ public function eliminarCliente()
     $consulta->execute(); //Ejecutar la consulta
     $conexion = null; //Cerrar conexion
 }
+public static function totalRegistros()
+{
+    $conexion = new Conexion();
+    $consulta = $conexion->prepare('SELECT COUNT(*) FROM ' . SELF::TABLA);
+    $consulta->execute();
+    $registros = $consulta->fetchColumn();
+    return $registros;
+}
+public static function limitRegistros($inicio, $hasta)
+{
+    $conexion = new Conexion();
+    $consulta = $conexion->prepare( 'SELECT * FROM ' . self::TABLA . ' LIMIT ' . 
+    $inicio . ',' . $hasta);
+    $consulta->execute();
+    $registros = $consulta ->fetchAll(PDO::FETCH_OBJ);
+    return $registros;
+}
 }

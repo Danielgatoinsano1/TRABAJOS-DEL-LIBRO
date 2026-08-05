@@ -37,7 +37,7 @@
     <br><br>
     <form class="fcolor-l5" action="guardar.php" method="post" enctype="multipart/form-data" autocomplete="off">
         <div id="codnom">
-        <label class="codnom1">Codigo: <input type="text" name="codigo" id="codigo" pattern="[0-9]{3,}"
+        <label class="codnom1">Codigo: <input type="text" name="codigo" id="codigo" pattern="[0-9]{3,/20}"
         placeholder="Ingresar Codigo" size="12" autofocus required> </label>
         <label class="codnom1">Producto:
         <input type="text" class="campof" name="nproducto" id="nproducto"
