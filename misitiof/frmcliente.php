@@ -102,8 +102,15 @@
 
             require_once 'manipularcli.php';
 
-            //Crear objeto con todos los datos del cliente
-            $listaclientes = modificarcliente::ConsultarClientes();
+            $pagina = isset($_GET['pagina']) ? max(1, (int) $_GET['pagina']) : 1;
+            $cantRegistros = 5;
+            $totalregistros = (int) modificarcliente::totalRegistros();
+            $numeropaginas = max(1, (int) ceil($totalregistros / $cantRegistros));
+            $pagina = min($pagina, $numeropaginas);
+            $inicio = ($pagina - 1) * $cantRegistros;
+
+            // Mostrar únicamente los cinco clientes correspondientes a la página actual
+            $listaclientes = modificarcliente::limitRegistros($inicio, $cantRegistros);
 
             foreach ($listaclientes as $cliente) { ?>
 
@@ -141,6 +148,31 @@
 
         </tbody> <!-- Cerrar el cuerpo de la tabla -->
     </table> <!-- Cerrar la tabla -->
+
+    <div class="w3-center w3-section">
+        <div class="w3-bar">
+            <?php if ($pagina > 1) { ?>
+                <a class="w3-bar-item w3-button w3-border w3-teal"
+                   href="frmcliente.php?pagina=<?php echo $pagina - 1; ?>">&laquo;</a>
+            <?php } else { ?>
+                <span class="w3-bar-item w3-button w3-border w3-teal w3-disabled">&laquo;</span>
+            <?php } ?>
+
+            <?php for ($i = 1; $i <= $numeropaginas; $i++) { ?>
+                <a class="w3-bar-item w3-button w3-border<?php echo $pagina == $i ? ' w3-dark-grey' : ''; ?>"
+                   href="frmcliente.php?pagina=<?php echo $i; ?>">
+                    <?php echo $i; ?>
+                </a>
+            <?php } ?>
+
+            <?php if ($pagina < $numeropaginas) { ?>
+                <a class="w3-bar-item w3-button w3-border w3-teal"
+                   href="frmcliente.php?pagina=<?php echo $pagina + 1; ?>">&raquo;</a>
+            <?php } else { ?>
+                <span class="w3-bar-item w3-button w3-border w3-teal w3-disabled">&raquo;</span>
+            <?php } ?>
+        </div>
+    </div>
 </div>
 
 </main>
