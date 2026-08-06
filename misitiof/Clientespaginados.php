@@ -6,12 +6,12 @@ require_once 'paginacionf.php';
 <div class="w3-container w3-center">
 
     <!-- Encabezado -->
-    <div class="w3-bar fcolor-d2" style="width: 80%;">
+    <div class="w3-bar fcolor-d2" style="width: 80%; display: block; margin: 0 auto;">
         <h2>Lista de clientes</h2>
     </div>
 
     <!-- Tabla de clientes -->
-    <div class="w3-bar" style="width: 80%;">
+    <div class="w3-bar" style="width: 80%; display: block; margin: 0 auto;">
 
         <table class="w3-table-all">
 
@@ -42,6 +42,7 @@ require_once 'paginacionf.php';
     </div>
 
     <!-- Barra de paginación -->
+    <div style="width: 80%; margin: 10px auto 0; text-align: center;">
     <div class="w3-bar">
 
         <!-- Botón Anterior -->
@@ -99,6 +100,7 @@ require_once 'paginacionf.php';
 
         <?php } ?>
 
+    </div>
     </div>
 
 </div>
