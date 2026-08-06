@@ -16,7 +16,7 @@ if ($id && $id > 0) {
     }
 }
 if ($mascota === null) {
-    header('Location: listar_mascotas.php?tipo=error&mensaje=' . urlencode('La mascota solicitada no existe.'));
+    header('Location: Mascotaspaginadas.php?tipo=error&mensaje=' . urlencode('La mascota solicitada no existe.'));
     exit;
 }
 $mensaje = isset($_GET['mensaje']) ? (string) $_GET['mensaje'] : '';
@@ -45,7 +45,7 @@ include __DIR__ . '/menu.php';
                 </div>
             </div>
             <button class="vet-boton" type="submit" name="actualizar_mascota">Actualizar mascota</button>
-            <a class="w3-button w3-light-grey" href="listar_mascotas.php">Cancelar</a>
+            <a class="w3-button w3-light-grey" href="Mascotaspaginadas.php">Cancelar</a>
         </form>
     </div>
 </section>

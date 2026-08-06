@@ -59,4 +59,30 @@ class GuardarMascota extends Conexion
         $consulta->execute([':id' => $id]);
         return $consulta->rowCount() > 0;
     }
+
+    public static function contarMascotas(): int
+    {
+        $almacen = new self();
+        $consulta = $almacen->conexion->prepare('SELECT COUNT(*) FROM Mascotas');
+        $consulta->execute();
+
+        return (int) $consulta->fetchColumn();
+    }
+
+    public static function obtenerMascotasPaginadas(int $inicio, int $cantidad): array
+    {
+        $almacen = new self();
+        $consulta = $almacen->conexion->prepare(
+            'SELECT id, nombre, especie, raza, edad, peso_actual, color_senas,
+                    responsable, telefono_emergencia
+             FROM Mascotas
+             ORDER BY id DESC
+             LIMIT :inicio, :cantidad'
+        );
+        $consulta->bindValue(':inicio', max(0, $inicio), PDO::PARAM_INT);
+        $consulta->bindValue(':cantidad', max(1, $cantidad), PDO::PARAM_INT);
+        $consulta->execute();
+
+        return $consulta->fetchAll();
+    }
 }

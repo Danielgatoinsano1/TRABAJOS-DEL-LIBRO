@@ -3,7 +3,7 @@ require_once __DIR__ . '/Mascota.php';
 require_once __DIR__ . '/GuardarMascota.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['actualizar_mascota'])) {
-    header('Location: listar_mascotas.php?tipo=error&mensaje=' . urlencode('Solicitud no válida.'));
+    header('Location: Mascotaspaginadas.php?tipo=error&mensaje=' . urlencode('Solicitud no válida.'));
     exit;
 }
 $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
@@ -13,7 +13,7 @@ foreach ($campos as $campo) {
     $datos[$campo] = trim((string) ($_POST[$campo] ?? ''));
 }
 if (!$id || in_array('', $datos, true)) {
-    header('Location: listar_mascotas.php?tipo=error&mensaje=' . urlencode('Datos incompletos.'));
+    header('Location: Mascotaspaginadas.php?tipo=error&mensaje=' . urlencode('Datos incompletos.'));
     exit;
 }
 try {
@@ -23,7 +23,7 @@ try {
         throw new RuntimeException('La mascota no existe.');
     }
     $repositorio->actualizar($id, $mascota);
-    header('Location: listar_mascotas.php?tipo=exito&mensaje=' . urlencode('Mascota actualizada correctamente.'));
+    header('Location: Mascotaspaginadas.php?tipo=exito&mensaje=' . urlencode('Mascota actualizada correctamente.'));
 } catch (InvalidArgumentException $e) {
     header('Location: editar_mascota.php?id=' . $id . '&mensaje=' . urlencode($e->getMessage()));
 } catch (Throwable $e) {

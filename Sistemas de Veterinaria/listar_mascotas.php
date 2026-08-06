@@ -1,24 +1,8 @@
 <?php
-require_once __DIR__ . '/conexion.php';
+require_once __DIR__ . '/paginacion_mascotas.php';
 
-$mascotas = [];
-$mensajeError = '';
 $mensaje = isset($_GET['mensaje']) ? (string) $_GET['mensaje'] : '';
 $tipo = ($_GET['tipo'] ?? '') === 'exito' ? 'exito' : 'error';
-
-try {
-    $baseDatos = new Conexion();
-    $consulta = $baseDatos->obtenerConexion()->prepare(
-        'SELECT id, nombre, especie, raza, edad, peso_actual, color_senas, responsable, telefono_emergencia
-        FROM Mascotas
-        ORDER BY id DESC'
-    );
-    $consulta->execute();
-    $mascotas = $consulta->fetchAll();
-} catch (Throwable $e) {
-    error_log($e->getMessage());
-    $mensajeError = 'No fue posible consultar las mascotas en este momento.';
-}
 
 function escapar($valor): string
 {
@@ -44,6 +28,11 @@ include __DIR__ . '/menu.php';
                 <a class="vet-boton" href="frmmascota.php">Registrar la primera mascota</a>
             </div>
         <?php else: ?>
+            <div class="vet-resumen-listado">
+                <strong><?= escapar($totalMascotas) ?> mascotas</strong>
+                <span>Mostrando <?= escapar($primerRegistro) ?>–<?= escapar($ultimoRegistro) ?></span>
+            </div>
+
             <div class="w3-responsive">
                 <table class="w3-table-all vet-tabla">
                     <thead>
@@ -73,10 +62,21 @@ include __DIR__ . '/menu.php';
                                 <td><?= escapar($mascota['responsable']) ?></td>
                                 <td><?= escapar($mascota['telefono_emergencia']) ?></td>
                                 <td>
-                                    <a class="w3-button w3-blue" href="editar_mascota.php?id=<?= escapar($mascota['id']) ?>">Editar</a>
+                                    <a
+                                        class="w3-btn w3-teal"
+                                        href="editar_mascota.php?id=<?= escapar($mascota['id']) ?>"
+                                        title="Editar mascota"
+                                        aria-label="Editar mascota"
+                                    ><i class="fas fa-edit" aria-hidden="true"></i></a>
                                     <form method="post" action="eliminar_mascota.php" style="display:inline" onsubmit="return confirm('¿Seguro que deseas eliminar esta mascota?');">
                                         <input type="hidden" name="id" value="<?= escapar($mascota['id']) ?>">
-                                        <button class="w3-button w3-red" type="submit" name="eliminar_mascota">Eliminar</button>
+                                        <button
+                                            class="w3-btn w3-red"
+                                            type="submit"
+                                            name="eliminar_mascota"
+                                            title="Eliminar mascota"
+                                            aria-label="Eliminar mascota"
+                                        ><i class="fas fa-user-times" aria-hidden="true"></i></button>
                                     </form>
                                 </td>
                             </tr>
@@ -84,6 +84,39 @@ include __DIR__ . '/menu.php';
                     </tbody>
                 </table>
             </div>
+
+            <nav class="vet-paginador" aria-label="Paginación de mascotas">
+                <div class="w3-bar">
+                <?php if ($paginaActual > 1): ?>
+                    <a
+                        class="w3-bar-item w3-button w3-border w3-teal"
+                        href="Mascotaspaginadas.php?pagina=<?= $paginaActual - 1 ?>"
+                        aria-label="Página anterior"
+                    >&laquo;</a>
+                <?php else: ?>
+                    <span class="w3-bar-item w3-button w3-border w3-teal w3-disabled">&laquo;</span>
+                <?php endif; ?>
+
+                <?php for ($numeroPagina = 1; $numeroPagina <= $totalPaginas; $numeroPagina++): ?>
+                    <a
+                        class="w3-bar-item w3-button w3-border<?= $numeroPagina === $paginaActual ? ' w3-dark-grey' : '' ?>"
+                        href="Mascotaspaginadas.php?pagina=<?= $numeroPagina ?>"
+                        <?= $numeroPagina === $paginaActual ? 'aria-current="page"' : '' ?>
+                    ><?= $numeroPagina ?></a>
+                <?php endfor; ?>
+
+                <?php if ($paginaActual < $totalPaginas): ?>
+                    <a
+                        class="w3-bar-item w3-button w3-border w3-teal"
+                        href="Mascotaspaginadas.php?pagina=<?= $paginaActual + 1 ?>"
+                        aria-label="Página siguiente"
+                    >&raquo;</a>
+                <?php else: ?>
+                    <span class="w3-bar-item w3-button w3-border w3-teal w3-disabled">&raquo;</span>
+                <?php endif; ?>
+                </div>
+            </nav>
+            <p class="vet-pagina-estado">Página <?= escapar($paginaActual) ?> de <?= escapar($totalPaginas) ?></p>
         <?php endif; ?>
     </div>
 </section>
