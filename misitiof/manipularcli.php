@@ -14,11 +14,12 @@ class modificarcliente extends datospersona
         //Preparar la consulta
         $consulta = $conexion->prepare(
             'INSERT INTO ' . self::TABLA .
-            ' (nomcli, direcli, telres_cli, telcel_cli, email_cli)
-            VALUES(:nombre, :direccion, :telresidencial, :telcelular, :email)'
+            ' (idcli, nomcli, direccli, telres_cli, telcel_cli, email_cli)
+            VALUES(:codigo, :nombre, :direccion, :telresidencial, :telcelular, :email)'
         );
 
         //Asignar los valores
+        $consulta->bindParam(':codigo', $this->dcodigo, PDO::PARAM_INT);
         $consulta->bindParam(':nombre', $this->dnombre);
         $consulta->bindParam(':direccion', $this->ddireccion);
         $consulta->bindParam(':telresidencial', $this->dtelresi);

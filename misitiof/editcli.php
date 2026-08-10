@@ -110,13 +110,20 @@
                     value="<?php echo $correocli; ?>"
                 >
             </div>
-
             <button
                 class="w3-btn w3-blue-grey w3-section"
                 name="cactualizar"
             >
                 Actualizar cliente
             </button>
+
+            <a
+                href="frmcliente.php"
+                class="w3-btn w3-teal w3-section"
+                style="float: right;"
+            >
+                Regresar al registro de Clientes
+            </a>
 
         </form>
 

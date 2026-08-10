@@ -3,6 +3,16 @@
 
 <main class="w3-row-padding w3-container">
 
+    <?php if (isset($_GET['estado']) && $_GET['estado'] === 'codigo_existe') { ?>
+        <div class="w3-panel w3-red">
+            <p>Ese código ya existe. Escribe un código diferente.</p>
+        </div>
+    <?php } elseif (isset($_GET['estado']) && $_GET['estado'] === 'error') { ?>
+        <div class="w3-panel w3-red">
+            <p>No se pudo guardar el cliente. Revisa los datos e inténtalo nuevamente.</p>
+        </div>
+    <?php } ?>
+
     <!-- Crear el formulario -->
     <div class="w3-col s6 w3-mobile w3-section">
 
@@ -18,10 +28,12 @@
                 <div class="w3-third">
                     <label for="ccod" class="w3-label f-color-texto"><b>Código</b></label>
                     <input class="w3-input w3-border fcolor-15"
-                        type="text"
-                        placeholder="id del cliente"
+                        type="number"
+                        placeholder="Escribe el código"
                         id="ccod"
                         name="ccodigo"
+                        min="1"
+                        step="1"
                         required
                         autofocus>
                 </div>
@@ -69,7 +81,7 @@
             <div class="w3-row-padding">
                 <label for="cemail" class="w3-label f-color-texto"><b>Email</b></label>
                 <input class="w3-input w3-border fcolor-15"
-                    type="tel"
+                    type="email"
                     id="cemail"
                     name="cemail"
                     placeholder="Correo electrónico">
@@ -77,7 +89,9 @@
 
             <div class="w3-container">
                 <button class="w3-btn w3-blue-grey w3-section"
-                        name="cguardar">
+                        type="submit"
+                        name="cguardar"
+                        value="1">
                         Guardar
                 </button>
                 
