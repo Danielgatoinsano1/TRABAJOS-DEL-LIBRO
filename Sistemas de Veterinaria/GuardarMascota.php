@@ -42,8 +42,8 @@ class GuardarMascota extends Conexion
     {
         $consulta = $this->conexion->prepare(
             'UPDATE Mascotas SET nombre=:nombre, especie=:especie, raza=:raza, edad=:edad,
-             peso_actual=:peso_actual, color_senas=:color_senas, responsable=:responsable,
-             telefono_emergencia=:telefono_emergencia WHERE id=:id'
+            peso_actual=:peso_actual, color_senas=:color_senas, responsable=:responsable,
+            telefono_emergencia=:telefono_emergencia WHERE id=:id'
         );
         return $consulta->execute([
             ':id' => $id, ':nombre' => $mascota->getNombre(), ':especie' => $mascota->getEspecie(),
