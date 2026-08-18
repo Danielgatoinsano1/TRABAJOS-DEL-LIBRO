@@ -46,7 +46,7 @@
 
             <div class="w3-dropdown-content w3-bar-block ftema">
                 <a href="cproductos.php" class="w3-bar-item w3-button">Crear producto</a>
-                <a href="#" class="w3-bar-item w3-button">Consultar y modificar producto</a>
+                <a href="Productospaginados.php" class="w3-bar-item w3-button">Consultar y modificar producto</a>
                 <a href="#" class="w3-bar-item w3-button">Clientes</a>
                 <a href="#" class="w3-bar-item w3-button">Agregar inventario</a>
                 <a href="#" class="w3-bar-item w3-button">Facturar</a>

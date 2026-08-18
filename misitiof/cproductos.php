@@ -1,74 +1,107 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="./imgfares/FAVICON.jpg" type="image/jpg" sizes="16x16">
-    <link rel="stylesheet" type="text/css" href="./EstilosCssF/dcoloresf.css">
-    <link rel="stylesheet" type="text/css" href="./EstilosCssF/diseñocssf.css">
-    <script src="./JScript/acciones_script.JS" defer></script>
-    <title>Inventario-Fares</title>
-</head>
+<?php
+require_once 'menu.php';
+require_once 'manipularproductos.php';
 
-<body>
-    <header id="titulo1" class="fcolor-d5">
-        <h1>Ediciones Fares</h1>
-    </header>
-    <nav CLASS="fcolor-l4">
-        <ul>
-            <li><a href="#">Principal</a></li>
-            <li><a href="#">Libros</a></li>
-            <li class="f-desplegable">
-                <a href="#" class="btndesplegable">Inventario</a>
-                <div class="cont-desplegable">
-                    <a href="cproductos.php">Crear producto Nuevo</a>
-                    <a href="#">Consultar producto</a>
+$pagina = isset($_GET['pagina']) ? max(1, (int) $_GET['pagina']) : 1;
+$cantidad = 5;
+$totalRegistros = modificarProducto::totalRegistros();
+$numeroPaginas = max(1, (int) ceil($totalRegistros / $cantidad));
+$pagina = min($pagina, $numeroPaginas);
+$productos = modificarProducto::limitarRegistros(($pagina - 1) * $cantidad, $cantidad);
+$estado = $_GET['estado'] ?? '';
+$mensajes = [
+    'guardado' => ['w3-green', 'El producto se guardó correctamente.'],
+    'actualizado' => ['w3-green', 'El producto se actualizó correctamente.'],
+    'eliminado' => ['w3-green', 'El producto se eliminó correctamente.'],
+    'codigo_existe' => ['w3-red', 'Ese código ya existe. Escribe uno diferente.'],
+    'imagen_error' => ['w3-red', 'La imagen debe ser JPG, PNG o GIF y debe poder subirse.'],
+    'no_encontrado' => ['w3-red', 'No se encontró el producto solicitado.'],
+    'error' => ['w3-red', 'No se pudo realizar la operación. Revisa los datos.'],
+];
+?>
+
+<main class="w3-row-padding w3-container">
+    <?php if (isset($mensajes[$estado])) { ?>
+        <div class="w3-panel <?php echo $mensajes[$estado][0]; ?>"><p><?php echo $mensajes[$estado][1]; ?></p></div>
+    <?php } ?>
+
+    <div class="w3-col s6 w3-mobile w3-section">
+        <div class="w3-container fcolor-d2"><h2>Ingresar datos del producto</h2></div>
+        <form class="w3-card" action="guardarproducto.php" method="post" enctype="multipart/form-data" autocomplete="off">
+            <div class="w3-row-padding">
+                <div class="w3-third">
+                    <label for="codigo"><b>Código</b></label>
+                    <input class="w3-input w3-border fcolor-15" type="number" id="codigo" name="codigo" min="1" step="1" required autofocus>
                 </div>
-            </li>
-            <li><a href="#">Contacto</a></li>
-        </ul>
-    </nav>
-    
-    <section class="fcolor-l1 seccion-form">
-        <div class="s-encabezado">
-            <h2>Inventario</h2>
-        </div>
-    <br><br>
-    <form class="fcolor-l5" action="guardar.php" method="post" enctype="multipart/form-data" autocomplete="off">
-        <div id="codnom">
-        <label class="codnom1">Codigo: <input type="text" name="codigo" id="codigo" pattern="[0-9]{3,/20}"
-        placeholder="Ingresar Codigo" size="12" autofocus required> </label>
-        <label class="codnom1">Producto:
-        <input type="text" class="campof" name="nproducto" id="nproducto"
-        pattern="^[A-Za-z\s]{3,100}$" placeholder="Ingrese nombre del producto" size="50" 
-        required> </label>    
-        </div>
-        
-        <div id="cospor">
-            <label class="codnom1">Costo: <input type="text" class="campof" name="costop" id="costop"
-            pattern="[0-9]+([,/.][0-9]+)?"> </label>
-            <label class="codnom1">Porcentaje de Venta: <input type="text" class="campof" name="porcentajev"
-            id="porcentajev" maxlength="3" size="4"> </label>
-        </div>
-        
-        <div id="prefecha">
-        <label class="codnom1">Precio de venta: <input type="text" class="campof" name="pventa" id="pventa" readon1y> </label>
-        <label class="codnom1">Fecha: <input type="date" class="campof" name="fecha_creacion" id="fecha_creacion" > </label>
-        </div>
+                <div class="w3-twothird">
+                    <label for="nproducto"><b>Producto</b></label>
+                    <input class="w3-input w3-border fcolor-15" type="text" id="nproducto" name="nproducto" maxlength="50" required>
+                </div>
+            </div>
+            <div class="w3-row-padding">
+                <div class="w3-half">
+                    <label for="costop"><b>Costo</b></label>
+                    <input class="w3-input w3-border fcolor-15" type="number" id="costop" name="costop" min="0" step="0.01" required>
+                </div>
+                <div class="w3-half">
+                    <label for="porcentajev"><b>Porcentaje de venta</b></label>
+                    <input class="w3-input w3-border fcolor-15" type="number" id="porcentajev" name="porcentajev" min="0" step="0.01" required>
+                </div>
+            </div>
+            <div class="w3-row-padding">
+                <div class="w3-half">
+                    <label for="pventa"><b>Precio de venta</b></label>
+                    <input class="w3-input w3-border fcolor-15" type="number" id="pventa" readonly>
+                </div>
+                <div class="w3-half">
+                    <label for="fecha_creacion"><b>Fecha</b></label>
+                    <input class="w3-input w3-border fcolor-15" type="date" id="fecha_creacion" name="fecha_creacion" required>
+                </div>
+            </div>
+            <div class="w3-row-padding">
+                <label for="simagen"><b>Imagen</b></label>
+                <input class="w3-input w3-border" type="file" id="simagen" name="simagen" accept="image/jpeg,image/png,image/gif">
+            </div>
+            <div class="w3-container"><button class="w3-btn w3-blue-grey w3-section" type="submit" name="cguardar" value="1">Guardar</button></div>
+        </form>
+    </div>
 
-        <div id="csimagen" >
-            <img src="" width="200px" alt="Imagen del Producto...">
-        </div>
+    <div class="w3-col s6 w3-mobile w3-section">
+        <table class="w3-table-all w3-hoverable w3-striped">
+            <thead><tr class="fcolor-11"><th>Código</th><th>Producto</th><th>Precio</th><th>Acción</th></tr></thead>
+            <tbody>
+                <?php foreach ($productos as $producto) { ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars((string) $producto->Codigo); ?></td>
+                        <td><?php echo htmlspecialchars($producto->nom_producto); ?></td>
+                        <td><?php echo number_format((float) $producto->precio_venta, 2); ?></td>
+                        <td>
+                            <a href="editproducto.php?codigo=<?php echo urlencode($producto->Codigo); ?>" class="w3-btn w3-teal" title="Editar"><i class="fas fa-edit"></i></a>
+                            <a href="eliminarproducto.php?codigo=<?php echo urlencode($producto->Codigo); ?>" class="w3-btn w3-red" title="Eliminar" onclick="return confirm('¿Deseas eliminar este producto?');"><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                <?php if (!$productos) { ?><tr><td colspan="4" class="w3-center">No hay productos registrados.</td></tr><?php } ?>
+            </tbody>
+        </table>
+        <div class="w3-center w3-section"><div class="w3-bar">
+            <?php if ($pagina > 1) { ?><a class="w3-bar-item w3-button w3-border w3-teal" href="cproductos.php?pagina=<?php echo $pagina - 1; ?>">&laquo;</a><?php } else { ?><span class="w3-bar-item w3-button w3-border w3-teal w3-disabled">&laquo;</span><?php } ?>
+            <?php for ($i = 1; $i <= $numeroPaginas; $i++) { ?><a class="w3-bar-item w3-button w3-border<?php echo $pagina === $i ? ' w3-dark-grey' : ''; ?>" href="cproductos.php?pagina=<?php echo $i; ?>"><?php echo $i; ?></a><?php } ?>
+            <?php if ($pagina < $numeroPaginas) { ?><a class="w3-bar-item w3-button w3-border w3-teal" href="cproductos.php?pagina=<?php echo $pagina + 1; ?>">&raquo;</a><?php } else { ?><span class="w3-bar-item w3-button w3-border w3-teal w3-disabled">&raquo;</span><?php } ?>
+        </div></div>
+    </div>
+</main>
 
-        <div id="botonimg">
-        <input type="file" class="campof" name="simagen" id="simagen">
-        </div>
-        <input type="submit" name="cguardar" id="cguardar" value="Guardar">
-    </form>
-    </section>
-    <footer class="fcolor-d5">
-        <p>Derechos Recervados &copy; 2004-2023 </p>
-    </footer>
-</body>
-</html>
+<script>
+const costo = document.getElementById('costop');
+const porcentaje = document.getElementById('porcentajev');
+const precio = document.getElementById('pventa');
+function calcularPrecio() {
+    const c = Number.parseFloat(costo.value) || 0;
+    const p = Number.parseFloat(porcentaje.value) || 0;
+    precio.value = (c + (c * p / 100)).toFixed(2);
+}
+costo.addEventListener('input', calcularPrecio);
+porcentaje.addEventListener('input', calcularPrecio);
+</script>
+<?php require 'pie_pagina.php'; ?>
