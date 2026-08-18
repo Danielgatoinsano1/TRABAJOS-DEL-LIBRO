@@ -9,16 +9,16 @@
         * { box-sizing: border-box; }
         body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #fff; }
         .menu-historias { width: 100%; color: #fff; }
-        .barra-superior { height: 34px; display: flex; justify-content: flex-end; align-items: center; gap: 55px; padding: 0 28px; background: #651c1c; border-bottom: 1px solid rgba(255,255,255,.2); font-size: 12px; }
+        .barra-superior { height: 34px; display: flex; justify-content: flex-end; align-items: center; gap: 55px; padding: 0 45px; background: #70211f; border-bottom: 1px solid rgba(255,255,255,.2); font-size: 12px; }
         .barra-superior a { color: #fff; text-decoration: none; opacity: .9; }
         .barra-superior i { margin-right: 6px; }
-        .barra-principal { min-height: 70px; display: flex; align-items: stretch; padding: 0 26px; background: linear-gradient(90deg, #681c1c, #8d302c); box-shadow: 0 2px 5px rgba(0,0,0,.22); }
+        .barra-principal { min-height: 70px; display: flex; align-items: stretch; padding-left: 27px; background: linear-gradient(90deg, #6c1d1b, #8d302c); box-shadow: 0 2px 5px rgba(0,0,0,.22); }
         .marca { display: flex; align-items: center; margin-right: auto; color: #fff; text-decoration: none; }
         .marca-icono { margin-right: 10px; font-size: 18px; }
         .marca-texto { font-family: Georgia, 'Times New Roman', serif; font-size: 29px; font-style: italic; letter-spacing: .5px; }
         .enlaces { display: flex; align-items: stretch; }
         .enlaces a { min-width: 125px; display: flex; justify-content: center; align-items: center; padding: 0 20px; color: #f6eaea; text-decoration: none; font-size: 14px; transition: .2s; }
-        .enlaces a:hover, .enlaces a.activo { color: #4c1717; background: #fff; }
+        .enlaces a:hover { color: #4c1717; background: #fff; }
         @media (max-width: 700px) {
             .barra-superior { display: none; }
             .barra-principal { padding: 12px; flex-direction: column; }
@@ -40,10 +40,12 @@
             <span class="marca-texto">Las Historias</span>
         </a>
         <div class="enlaces">
-            <a class="activo" href="frmcliente.php">Historia</a>
+            <a href="frmcliente.php">Historia</a>
             <a href="#">Galería</a>
-            <a href="#">Recomendación</a>
+            <a href="#">Localización</a>
             <a href="#">Materiales</a>
         </div>
     </nav>
 </header>
+</body>
+</html>
