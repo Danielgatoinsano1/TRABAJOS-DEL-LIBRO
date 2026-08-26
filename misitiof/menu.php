@@ -51,8 +51,44 @@
                 <a href="#" class="w3-bar-item w3-button">Agregar inventario</a>
                 <a href="#" class="w3-bar-item w3-button">Facturar</a>
                 <a href="#" class="w3-bar-item w3-button">Información libros</a>
-            </div>
-        </div>
+        <div class="w3-dropdown-hover w3-mobile">
+    <button class="w3-button">Inventario</button>
+
+    <div class="w3-dropdown-content w3-bar-block fcolor">
+
+        <a href="cproductos.php"
+        class="w3-bar-item w3-button w3-mobile">
+            Crear producto
+        </a>
+
+        <a href="#"
+        class="w3-bar-item w3-button w3-mobile">
+            Consultar y modificar productos
+        </a>
+
+        <a href="frmcliente.php"
+           class="w3-bar-item w3-button w3-mobile">
+         Clientes
+        </a>
+
+        <a href="frmMovimiento.php"
+        class="w3-bar-item w3-button w3-mobile">
+            Agregar inventario
+        </a>
+
+        <a href="#"
+        class="w3-bar-item w3-button w3-mobile">
+            Facturar
+        </a>
+
+        <a href="#"
+        class="w3-bar-item w3-button w3-mobile">
+            Información libros
+        </a>
+
+    </div>
+
+</div>
 
         <a href="#" class="w3-bar-item w3-button w3-mobile">
             Contacto
