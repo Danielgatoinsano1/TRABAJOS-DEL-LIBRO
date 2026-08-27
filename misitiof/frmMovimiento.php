@@ -26,6 +26,7 @@
                         placeholder="Id producto"
                         id="codpro"
                         name="codpro"
+                        onkeyup="mostrarProducto(this.value)"
                         required>
                 </div>
 
