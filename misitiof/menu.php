@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="EstilosCssF/dcoloresf.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
     <!-- JavaScript -->
+    <script src="JScript/jquery-3.6.0.min.js"></script>
     <script src="JScript/acciones_script.js"></script>
 </head>
 
@@ -49,7 +50,7 @@
                 <a href="Productospaginados.php" class="w3-bar-item w3-button">Consultar y modificar producto</a>
                 <a href="#" class="w3-bar-item w3-button">Clientes</a>
                 <a href="#" class="w3-bar-item w3-button">Agregar inventario</a>
-                <a href="#" class="w3-bar-item w3-button">Facturar</a>
+                <a href="frmFactura.php" class="w3-bar-item w3-button">Facturar</a>
                 <a href="#" class="w3-bar-item w3-button">Información libros</a>
         <div class="w3-dropdown-hover w3-mobile">
     <button class="w3-button">Inventario</button>
@@ -76,7 +77,7 @@
             Agregar inventario
         </a>
 
-        <a href="#"
+        <a href="frmFactura.php"
         class="w3-bar-item w3-button w3-mobile">
             Facturar
         </a>
