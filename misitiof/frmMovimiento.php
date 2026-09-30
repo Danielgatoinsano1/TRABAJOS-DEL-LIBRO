@@ -26,7 +26,7 @@
                         placeholder="Id producto"
                         id="codpro"
                         name="codpro"
-                        onkeyup="mostrarProducto(this.value)"
+                        oninput="mostrarProducto(this.value)"
                         required>
                 </div>
 
@@ -39,6 +39,7 @@
                         type="text"
                         id="nompro"
                         name="nompro"
+                        readonly
                         placeholder="Nombre del producto">
                 </div>
 
@@ -47,11 +48,7 @@
                         <b>Fecha:</b>
                     </label>
 
-                    <input class="w3-input w3-border fcolor-15"
-                        type="date"
-                        id="fechmovi"
-                        name="fechmovi"
-                        required>
+                    <input class="w3-input w3-border fcolor-15" type="date" id="fechmovi" name="fechmovi" required value="<?php echo date('Y-m-d'); ?>">
                 </div>
 
                 <div class="w3-row-padding">
@@ -59,11 +56,7 @@
                         <b>Cantidad:</b>
                     </label>
 
-                    <input class="w3-input w3-border fcolor-15"
-                    type="text"
-                    id="cantpro"
-                    name="cantpro"
-                    placeholder="Cantidad producto">
+                    <input class="w3-input w3-border fcolor-15" type="number" id="cantpro" name="cantpro" min="1" step="1" required placeholder="Cantidad producto">
                 </div>
 
                 <button class="w3-btn w3-blue-grey w3-section"

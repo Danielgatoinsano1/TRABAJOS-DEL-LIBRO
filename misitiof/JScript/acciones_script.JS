@@ -7,9 +7,9 @@ function iniciarf() {
     vporcentaje = document.getElementById("porcentajev");
     vimage = document.getElementById("simagen");
     // Preparar el evento input del objeto vcosto
-    vcosto.addEventListener("input", mostrarpventa);
-    vporcentaje.addEventListener("input", mostrarpventa);
-    vimage.addEventListener("input", mostrarImagen);
+    if (vcosto) vcosto.addEventListener("input", mostrarpventa);
+    if (vporcentaje) vporcentaje.addEventListener("input", mostrarpventa);
+    if (vimage) vimage.addEventListener("input", mostrarImagen);
 }
 
 function calcularPorcentaje(costof, porcentajef) {
@@ -59,26 +59,22 @@ function mostrarImagen() {
     }
 }
 function mostrarProducto(produc) {
-    if (produc.length == 0) { //Si no se ha introducido ningún id del producto
-        //Mostrar en producto "Producto no seleccionado"
-        document.getElementById("nompro").value = "Producto no seleccionado";
-        return; //Salir de la función
-    }
+    const codigo = String(produc || '').trim();
+    const campo = document.getElementById('nompro');
+    if (!codigo) { campo.value = ''; return; }
 
-    //Declarar el objeto fnproducto de tipo XMLHttpRequest
-    var fnproducto = new XMLHttpRequest();
-
-    //Ejecutar esta función anónima dependiendo del valor de onreadystatechange
-    fnproducto.onreadystatechange = function() {
-        //Si el valor readyState es 4 y el de stadus es 200 entonces
-        if (this.readyState == 4 && this.status == 200) {
-            //Mostrar el valor devuelto en el como Producto
-            document.getElementById("nompro").value = this.responseText;
+    const peticion = new XMLHttpRequest();
+    peticion.onreadystatechange = function () {
+        if (this.readyState !== XMLHttpRequest.DONE) return;
+        if (this.status !== 200) { campo.value = 'No se pudo consultar el producto'; return; }
+        try {
+            const productos = JSON.parse(this.responseText);
+            campo.value = Array.isArray(productos) && productos.length ? productos[0].nomproducto : (productos.mensaje || 'Producto no encontrado');
+        } catch (error) {
+            campo.value = 'Respuesta inválida del servidor';
         }
-    }
-
-    //Enviar el id del producto a través de la variable dato y método get
-    //al archivo conProductoId.php
-    fnproducto.open("GET", "conProductoId.php?dato=" + produc, true);
-    fnproducto.send();
+    };
+    peticion.open('POST', 'buscarproducto.php', true);
+    peticion.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+    peticion.send('producto=' + encodeURIComponent(codigo));
 }

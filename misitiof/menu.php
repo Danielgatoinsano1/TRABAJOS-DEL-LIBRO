@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
     <!-- JavaScript -->
     <script src="JScript/jquery-3.6.0.min.js"></script>
-    <script src="JScript/acciones_script.js"></script>
+    <script src="JScript/acciones_script.JS?v=2"></script>
 </head>
 
 <body>

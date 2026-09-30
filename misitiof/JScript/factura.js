@@ -1,40 +1,83 @@
 $(function () {
-    $('#codpro').on('keyup', function () {
-        const producto = $(this).val().trim();
+    let solicitudCliente;
+    let solicitudProducto;
 
-        if (producto === '') {
-            $('#despro, #prepro, #totpro').val('');
-            return;
-        }
+    $('#codcliente').on('input', function () {
+        const codigo = $(this).val().trim();
+        $('#nomcliente').val('');
+        if (solicitudCliente) solicitudCliente.abort();
+        if (!codigo) return;
+        solicitudCliente = $.ajax({
+            url: 'buscarclientes.php', type: 'POST', dataType: 'json',
+            data: { buscarcliente: codigo }
+        }).done(function (clientes) {
+            if (clientes.length) $('#nomcliente').val(clientes[0].nombreCliente);
+        });
+    });
 
-        $.ajax({
-            url: 'buscarproducto.php',
-            data: { producto: producto },
-            type: 'POST',
-            dataType: 'json',
-            success: function (response) {
-                if (!response.error && response.length > 0) {
-                    const productoEncontrado = response[0];
-                    $('#prepro').val(productoEncontrado.preproducto);
-                    $('#despro').val(productoEncontrado.nomproducto);
-                    calcularTotalProducto();
-                } else {
-                    $('#despro, #prepro, #totpro').val('');
-                }
-            },
-            error: function () {
-                $('#despro, #prepro, #totpro').val('');
+    $('#codpro').on('input', function () {
+        const codigo = $(this).val().trim();
+        $('#despro, #prepro, #totpro').val('');
+        if (solicitudProducto) solicitudProducto.abort();
+        if (!codigo) return;
+        solicitudProducto = $.ajax({
+            url: 'buscarproducto.php', type: 'POST', dataType: 'json',
+            data: { producto: codigo }
+        }).done(function (productos) {
+            if (productos.length) {
+                $('#despro').val(productos[0].nomproducto);
+                $('#prepro').val(productos[0].preproducto);
+                calcularTotalProducto();
             }
         });
     });
 
-    $('#cantpro').on('input keyup', calcularTotalProducto);
+    $('#cantpro, #prepro').on('input change', calcularTotalProducto);
+    $('#btn2').on('click', agregarProducto);
+    $('#btnNueva').on('click', function () { window.location.href = 'frmFactura.php'; });
+    $('#formFactura').on('submit', function (evento) {
+        if (!$('#codcliente').val() || !$('#nomcliente').val()) {
+            evento.preventDefault(); alert('Escriba un código de cliente válido.'); return;
+        }
+        if (!$('#tablaFactura tbody tr').length) {
+            evento.preventDefault(); alert('Agregue al menos un producto.');
+        }
+    });
 });
 
 function calcularTotalProducto() {
+    const cantidad = Number($('#cantpro').val()) || 0;
+    const precio = Number($('#prepro').val()) || 0;
+    const subtotal = cantidad * precio;
+    $('#totpro').val(Number.isFinite(subtotal) && cantidad > 0 && precio >= 0 ? subtotal.toFixed(2) : '');
+}
+
+function agregarProducto() {
+    const codigo = $('#codpro').val().trim();
     const cantidad = Number($('#cantpro').val());
     const precio = Number($('#prepro').val());
-    const total = cantidad * precio;
+    const nombre = $('#despro').val();
+    if (!codigo || !nombre || !Number.isInteger(cantidad) || cantidad <= 0 || !Number.isFinite(precio) || precio < 0) {
+        alert('Busque un producto válido e indique una cantidad entera mayor que cero.'); return;
+    }
+    const fila = $('<tr>');
+    fila.append($('<td>').text(codigo).append($('<input>', { type: 'hidden', name: 'productos[]', value: codigo })));
+    fila.append($('<td>').text(cantidad).append($('<input>', { type: 'hidden', name: 'cantidades[]', value: cantidad })));
+    fila.append($('<td>').text(nombre));
+    fila.append($('<td>').text(precio.toFixed(2)));
+    fila.append($('<td class="subtotal-fila">').text((cantidad * precio).toFixed(2)));
+    fila.append($('<td>').append($('<button type="button" class="quitar-producto">Quitar</button>')));
+    $('#tablaFactura tbody').append(fila);
+    fila.find('.quitar-producto').on('click', function () { fila.remove(); calcularTotalesFactura(); });
+    $('#codpro, #cantpro, #despro, #prepro, #totpro').val('');
+    calcularTotalesFactura();
+}
 
-    $('#totpro').val(Number.isFinite(total) && cantidad > 0 ? total.toFixed(2) : '');
+function calcularTotalesFactura() {
+    let subtotal = 0;
+    $('#tablaFactura tbody .subtotal-fila').each(function () { subtotal += Number($(this).text()) || 0; });
+    const iva = subtotal * 0.15;
+    $('#subtotalfact').val(subtotal.toFixed(2));
+    $('#impuestofact').val(iva.toFixed(2));
+    $('#todpagarfact').val((subtotal + iva).toFixed(2));
 }
