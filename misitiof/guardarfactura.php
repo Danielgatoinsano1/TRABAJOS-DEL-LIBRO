@@ -51,5 +51,4 @@ try {
     exit;
 } catch (Throwable $error) {
     if (isset($conexion) && $conexion->inTransaction()) $conexion->rollBack();
-    volverConError($error instanceof InvalidArgumentException ? $error->getMessage() : 'No se pudo guardar la factura. Verifique que la base de datos esté preparada.');
 }

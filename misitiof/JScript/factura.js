@@ -40,7 +40,7 @@ $(function () {
             evento.preventDefault(); alert('Escriba un código de cliente válido.'); return;
         }
         if (!$('#tablaFactura tbody tr').length) {
-            evento.preventDefault(); alert('Agregue al menos un producto.');
+            evento.preventDefault();
         }
     });
 });
@@ -58,7 +58,7 @@ function agregarProducto() {
     const precio = Number($('#prepro').val());
     const nombre = $('#despro').val();
     if (!codigo || !nombre || !Number.isInteger(cantidad) || cantidad <= 0 || !Number.isFinite(precio) || precio < 0) {
-        alert('Busque un producto válido e indique una cantidad entera mayor que cero.'); return;
+    return;
     }
     const fila = $('<tr>');
     fila.append($('<td>').text(codigo).append($('<input>', { type: 'hidden', name: 'productos[]', value: codigo })));
@@ -73,11 +73,37 @@ function agregarProducto() {
     calcularTotalesFactura();
 }
 
-function calcularTotalesFactura() {
-    let subtotal = 0;
+   let subtotal = 0;
     $('#tablaFactura tbody .subtotal-fila').each(function () { subtotal += Number($(this).text()) || 0; });
     const iva = subtotal * 0.15;
     $('#subtotalfact').val(subtotal.toFixed(2));
     $('#impuestofact').val(iva.toFixed(2));
     $('#todpagarfact').val((subtotal + iva).toFixed(2));
+    $('#cod_cliente').keyup(function () {
+    if ($('cod_cliente ').val()) {
+        let buscarcliente = $('cod_cliente').val();
+        $.ajax({
+            url: 'buscarclientes.php',
+            data: { 
+                buscarcliente
+             
+    },
+    type: 'POST',
+    success: function (response) {
+        if (!response.error) {
+            let varnomcliente = "";
+            let varclientes = JSON.parse(response);
+            varclientes.forEach(cliente => {
+                varnomcliente = cliente.nombreCliente;
+            });
+            if (varnomcliente) {
+            $('#nom_cliente').val(varnomcliente);
+        }
 }
+        }
+    })
+ 
+}
+$("nom_cliente").val("");
+
+})
