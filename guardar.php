@@ -21,7 +21,7 @@ function filtrofares($dat_fares)
 function guardaimagen()
 {
     if (isset($_POST['cguardar'])) {
-        $vcodigo = ""; //Declakrar variable
+        $vcodigo = ""; //Declarar variable
         if (!empty($_POST["codigo"])) { //Si el campo código es distinto de vacío entonces
             //Almacenar en la variable $vcodigo el valor del código
             //que ingresó el usuario ya filtrado
@@ -90,18 +90,10 @@ if (isset($_POST["cguardar"]) && $_SERVER["REQUEST_METHOD"] == "POST") {
     try {
         // Almacenar la consulta en la variable sql
         $sql = "INSERT INTO inventario (codigo, nom_producto, costo, porc_venta,
-                 precio_venta, fecha, Imagen, stock)
-                VALUES (:codigo, :nproducto, :costop, :porcentajev,
-                        :pventa, :fecha_creacion, :simagen, 0)";
-        $consulta = $conexion->prepare($sql);
-        $consulta->bindParam(':codigo', $v_ccodigo);
-        $consulta->bindParam(':nproducto', $v_nproducto);
-        $consulta->bindParam(':costop', $v_costop);
-        $consulta->bindParam(':porcentajev', $v_porcentajev);
-        $consulta->bindParam(':pventa', $v_pventa);
-        $consulta->bindParam(':fecha_creacion', $v_fecha_creacion);
-        $consulta->bindParam(':simagen', $v_simagen);
-        $consulta->execute(); // Ejecutar la consulta
+                 precio_venta, fecha, Imagen)
+                VALUES ('$v_ccodigo', '$v_nproducto', '$v_costop', '$v_porcentajev',
+                        '$v_pventa', '$v_fecha_creacion', '$v_simagen')";
+            $conexion->query($sql); // Ejecutar la consulta
       
         } catch (PDOException $e) {
             // Manejar el error si ocurre

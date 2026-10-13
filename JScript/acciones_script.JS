@@ -1,80 +1,78 @@
-window.addEventListener("load", iniciarf);
-
+window.addEventListener("load",iniciarf);
 function iniciarf() {
-    // Capturar el elemento HTML con el id costop
+    //Capturar el elemento HTML con el id costop
     vcosto = document.getElementById("costop");
-    // Capturar el elemento HTML con el id porcentajev
+    //Capturar el elemento HTML con el id porcentajev
     vporcentaje = document.getElementById("porcentajev");
     vimage = document.getElementById("simagen");
-    // Preparar el evento input del objeto vcosto
-    if (vcosto) vcosto.addEventListener("input", mostrarpventa);
-    if (vporcentaje) vporcentaje.addEventListener("input", mostrarpventa);
-    if (vimage) vimage.addEventListener("input", mostrarImagen);
+    //Preparar el evento input del objeto vcosto
+    vcosto.addEventListener("input", mostrarpventa);
+    vporcentaje.addEventListener("input", mostrarpventa);
+    vimage.addEventListener("input", mostrarImagen);
 }
-
 function calcularPorcentaje(costof, porcentajef) {
-    // Realizar el cálculo del porcentaje
+    //Realizar el calculo del porcentaje
     let TantoTotal = costof * (porcentajef / 100);
-    // Calcular el precio de venta
+    //Calcular el precio de venta
     let PVenta = parseFloat(costof) + parseFloat(TantoTotal);
-    // Retornar el precio de venta a la función
+    //Retornar el precio de venta a la funcion
     return PVenta;
 }
-
 function mostrarpventa() {
-    // Si el costo y el porcentaje son distintos de vacío entonces
-    if (vcosto.value !== "" && vporcentaje.value !== "") {
-        // Convertir los valores a números
-        let costoNum = parseFloat(vcosto.value);
-        let porcentajeNum = parseFloat(vporcentaje.value);
-        
-        // Verificar que los valores sean números válidos
-        if (!isNaN(costoNum) && !isNaN(porcentajeNum)) {
-            // Llamar a la función calcularPorcentaje y almacenar el resultado en la variable calculo
-            let calculo = calcularPorcentaje(costoNum, porcentajeNum);
-            // Mostrar el precio de venta
-            document.getElementById("pventa").value = calculo;
-        } else {
-            // Limpiar el campo con el id pventa si los valores no son válidos
-            document.getElementById("pventa").value = "";
-        }
-    } else {
-        // Si no se ingresó el costo o el porcentaje entonces
-        // Limpiar el campo con el id pventa
+    //Si el costo y el porcentaje es distinto de vacio entonces
+    if (vcosto.value != "" && vporcentaje.value != "") {
+        //Lamar a la funcion calcularPorcentaje y almacenar el
+        //Resultado en la variable calculo
+        let calculo = calcularPorcentaje(vcosto.value, vporcentaje.value);
+        //Mostrar el precio de venta
+        document.getElementById("pventa").value = calculo;
+
+    }else {//Si no se ingreso el costo o el porcentaje entonces
+        //Limpiar el campo con el id pventa
         document.getElementById("pventa").value = "";
     }
 }
-
 function mostrarImagen() {
+    /*Asignar la etiqueta img a la variable verimagen */
     var verimagen = document.querySelector('img');
+    /*Asignar el input de tipo file a la variable archivof */
     var archivof = document.querySelector('input[type=file]').files[0];
+    /*Asignar el archivo leido a la variable leerarchivo */
     var leerarchivo = new FileReader();
-    leerarchivo.onload = function() {
+    /*Ejecutar la funcion anonima cuando el archivo se cargue*/
+    leerarchivo.onloadend = function () {
+        /*Asignar la direccion del archivo al atributo src de img.
+        para mostrar la imagen cargada */
         verimagen.src = leerarchivo.result;
     }
+    /*Si existen datos en la variable archivof entonces*/
     if (archivof) {
+        /*Asignar la direccion de la variable archivof a la varible leerarchivo*/
         leerarchivo.readAsDataURL(archivof);
-    } else {
+    }else{/*Si no existen datos en la variable archivof, entonces */
+        /*Asignar un valor vacio al atributo src de img */
         verimagen.src = "";
     }
 }
-function mostrarProducto(produc) {
-    const codigo = String(produc || '').trim();
-    const campo = document.getElementById('nompro');
-    if (!codigo) { campo.value = ''; return; }
 
-    const peticion = new XMLHttpRequest();
-    peticion.onreadystatechange = function () {
-        if (this.readyState !== XMLHttpRequest.DONE) return;
-        if (this.status !== 200) { campo.value = 'No se pudo consultar el producto'; return; }
-        try {
-            const productos = JSON.parse(this.responseText);
-            campo.value = Array.isArray(productos) && productos.length ? productos[0].nomproducto : (productos.mensaje || 'Producto no encontrado');
-        } catch (error) {
-            campo.value = 'Respuesta inválida del servidor';
+function mostrarProducto(produc) {
+    if (produc.length == 0) { //Si no se ha introducido ningun id del producto
+        //Mostrar en producot "Producto no seleccionado"
+        document.getElementById("nompro").value = "Producto no seleccionado";
+        return; //Salir de la funcion
+    }
+    //Declarar el objeto fnproducto de tipo XMLHttpRequest
+    var fnproducto = new XMLHttpRequest();
+    //Ejecutar esta funcion anonima dependiendo del valor de onreadystatechange
+    fnproducto.onreadystatechange = function() {
+        //Si el valor readyState es 4 y el de stadus es 200 entonces
+        if (this.readyState == 4 && this.status == 200) {
+            //Mostrar el valor devuelto en el como Producto
+            document.getElementById("nompro").value = this.responseText;
         }
-    };
-    peticion.open('POST', 'buscarproducto.php', true);
-    peticion.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-    peticion.send('producto=' + encodeURIComponent(codigo));
+    }
+    //Enviar el id del producto a traves de la variable dato y metodo get
+    //al archivo conProductoId.php
+    fnproducto.open("GET", "conProductoId.php?dato=" + produc, true);
+    fnproducto.send();
 }

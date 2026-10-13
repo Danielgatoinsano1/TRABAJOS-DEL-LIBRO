@@ -24,12 +24,28 @@ CREATE TABLE IF NOT EXISTS `inventario` (
   PRIMARY KEY (`Codigo`), KEY `idx_inventario_producto` (`nom_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Normaliza instalaciones antiguas de inventario que carecen de clave primaria.
-ALTER TABLE `inventario` MODIFY `Codigo` INT UNSIGNED NOT NULL AUTO_INCREMENT;
+-- Agrega primero la clave: MariaDB requiere un índice para AUTO_INCREMENT.
 SET @sql_pk = (SELECT IF(COUNT(*) = 0, 'ALTER TABLE `inventario` ADD PRIMARY KEY (`Codigo`)', 'SELECT 1') FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'inventario' AND index_name = 'PRIMARY');
 PREPARE sentencia_pk FROM @sql_pk;
 EXECUTE sentencia_pk;
 DEALLOCATE PREPARE sentencia_pk;
+ALTER TABLE `inventario` MODIFY `Codigo` INT UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE `inventario`
+  MODIFY `costo` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  MODIFY `porc_venta` DECIMAL(6,2) NOT NULL DEFAULT 0.00,
+  MODIFY `precio_venta` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  MODIFY `imagen` VARCHAR(255) DEFAULT NULL;
+CREATE TABLE IF NOT EXISTS `movimientos` (
+  `id_movimiento` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_producto` INT UNSIGNED NOT NULL,
+  `fecha_movimiento` DATE NOT NULL,
+  `cantidad_movi` INT NOT NULL,
+  PRIMARY KEY (`id_movimiento`),
+  KEY `idx_movimientos_producto` (`id_producto`),
+  CONSTRAINT `fk_movimientos_producto`
+    FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`Codigo`)
+    ON UPDATE CASCADE ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 CREATE TABLE IF NOT EXISTS `factura` (
   `idfactura` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `idcli` INT NOT NULL,
