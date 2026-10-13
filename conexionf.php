@@ -8,7 +8,7 @@ function conect()
     $password="";
     try {
         //Realizar la conexion con la base de datos
-        $conexion = new PDO("mysql:host=$nom_servidor;dbname=sistem_fares_02;charset=UTF8",
+        $conexion = new PDO("mysql:host=$nom_servidor;dbname=sistem_fares;charset=utf8mb4",
         $username, $password, array(
             PDO::ATTR_EMULATE_PREPARES => false,
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
