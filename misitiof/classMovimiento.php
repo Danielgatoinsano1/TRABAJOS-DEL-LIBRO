@@ -36,25 +36,26 @@ class datos_Movimiento
 
     const TABLA = 'movimientos';
     public function guardarmov($stocActual) {
-        $cantidadStock = (int) $this->cantidadmov;
-        $nuevo_stock = 0;
-        if (isset($cantidadStock, $stocActual)) {
-            $nuevo_stock = $stocActual + $cantidadStock; //Calcular el nuevo stock
-        } else {
-            exit;
+        $cantidad = filter_var($this->cantidadmov, FILTER_VALIDATE_INT);
+        $producto = filter_var($this->idproducto, FILTER_VALIDATE_INT);
+        if ($cantidad === false || $cantidad < 1 || $producto === false || $producto < 1) {
+            throw new InvalidArgumentException('Producto y cantidad deben ser valores válidos.');
         }
-        //Conectar con la base de datos
         $conexion = new Conexion();
-        $conexion->beginTransaction();
-        //Preparar la consulta
-        $conexion->exec('INSERT INTO movimientos (id_producto, cantidad_movi) VALUES(' . $this->idproducto . ',' . $this->cantidadmov . ')');
-        $conexion->exec('UPDATE ' . 'inventario' . ' SET stock = ' . $nuevo_stock . ' where codigo = ' . $this->idproducto);
-        if ($conexion->commit()) { //Si se guardaron los datos correctamente
-            echo "datos guardados con exito"; //Mostrar mensaje
-        } else {
-            $conexion->rollBack(); //Rehacer los cambios
-            echo "imposible guardar los datos";
+        try {
+            $conexion->beginTransaction();
+            $insertar = $conexion->prepare('INSERT INTO movimientos (id_producto, fecha_movimiento, cantidad_movi) VALUES (:producto, :fecha, :cantidad)');
+            $insertar->execute([':producto' => $producto, ':fecha' => $this->fechmovimiento ?: date('Y-m-d'), ':cantidad' => $cantidad]);
+            $actualizar = $conexion->prepare('UPDATE inventario SET stock = stock + :cantidad WHERE Codigo = :producto');
+            $actualizar->execute([':cantidad' => $cantidad, ':producto' => $producto]);
+            if ($actualizar->rowCount() !== 1) {
+                throw new RuntimeException('El producto no existe en el inventario.');
+            }
+            $conexion->commit();
+            return true;
+        } catch (Throwable $error) {
+            if ($conexion->inTransaction()) $conexion->rollBack();
+            throw $error;
         }
-        $conexion = null; //Cerrar conexion
     }
 }

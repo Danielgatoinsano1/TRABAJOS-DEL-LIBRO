@@ -1,8 +1,12 @@
 <?php
 require_once 'conexionf2.php';
 //Recuperar los datos de la sesion
-session_start();
-$cod_pro = $_SESSION['facturan'];
+if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+$cod_pro = $_SESSION['facturan'] ?? null;
+if (!$cod_pro) {
+    header('Location: frmFactura.php');
+    exit;
+}
 $pre = $cod_pro;
 $conexion = new Conexion();
 $consulta = $conexion->prepare('SELECT movimientofactura.facturano, movimientofactura.cantfact,

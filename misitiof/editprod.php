@@ -5,7 +5,7 @@ $conexion = conect();
 // Obtener datos del producto a editar
 if (isset($_GET['codigo'])) {
     $codigo = $_GET['codigo'];
-    $stmt = $conexion->prepare("SELECT * FROM inventario WHERE codigo = :codigo");
+    $stmt = $conexion->prepare("SELECT Codigo AS codigo, nom_producto, costo, precio_venta FROM inventario WHERE Codigo = :codigo");
     $stmt->execute([':codigo' => $codigo]);
     $prod = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             nom_producto = :nom_producto, 
             costo = :costo, 
             precio_venta = :precio_venta 
-            WHERE codigo = :codigo";
+            WHERE Codigo = :codigo";
             
     $stmt = $conexion->prepare($sql);
     $stmt->execute([

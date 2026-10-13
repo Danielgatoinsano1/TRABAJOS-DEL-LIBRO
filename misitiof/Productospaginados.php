@@ -72,13 +72,13 @@ $numeropaginas = ceil($totalregistros / $cantRegistros);
                 <tbody>
                     <?php foreach ($listaproductos as $fila): ?>
                     <tr>
-                        <td><?php echo $fila['codigo']; ?></td>
+                        <td><?php echo htmlspecialchars((string) $fila['Codigo'], ENT_QUOTES, 'UTF-8'); ?></td>
                         <td><?php echo $fila['nom_producto']; ?></td>
                         <td><?php echo $fila['costo']; ?></td>
                         <td><?php echo $fila['precio_venta']; ?></td>
                         <td class="w3-center">
-                            <a href="editprod.php?codigo=<?php echo $fila['codigo']; ?>" class="w3-button w3-blue w3-tiny w3-round">Editar</a>
-                            <a href="eliminaprod.php?codigo=<?php echo $fila['codigo']; ?>" class="w3-button w3-red w3-tiny w3-round">Eliminar</a>
+                            <a href="editprod.php?codigo=<?php echo rawurlencode((string) $fila['Codigo']); ?>" class="w3-button w3-blue w3-tiny w3-round">Editar</a>
+                            <a href="eliminaprod.php?codigo=<?php echo rawurlencode((string) $fila['Codigo']); ?>" class="w3-button w3-red w3-tiny w3-round">Eliminar</a>
                         </td>
                     </tr>
                     <?php endforeach; ?>

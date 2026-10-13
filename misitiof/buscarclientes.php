@@ -1,7 +1,9 @@
 <?php
 require_once 'conexionf2.php';
 //Almacenar en $cod_cli el valor de la variable buscarcliente recibida por el metodo POST
-$cod_cli = $_POST['buscarcliente'];
+$cod_cli = filter_input(INPUT_POST, 'buscarcliente', FILTER_VALIDATE_INT);
+header('Content-Type: application/json; charset=UTF-8');
+if (!$cod_cli) { echo json_encode([]); exit; }
 //Realizar la consulta
 $conexion = new Conexion();
 $consulta = $conexion->prepare('SELECT * FROM clientes where idcli = :codcli');
@@ -17,6 +19,5 @@ if ($registros) {
             'nombrecliente' => $cliente['nomcli'],
         );
     }
-    $jsonstring = json_encode($json);
-    echo $jsonstring;
 }
+echo json_encode($json, JSON_UNESCAPED_UNICODE);

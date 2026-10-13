@@ -1,11 +1,13 @@
 <?php
 require_once 'conexionf2.php';
 //Almacenar en $cod_pr el valor de la variable dato recibida por el metodo GET
-$cod_pro = $_POST['producto'];
+$cod_pro = filter_input(INPUT_POST, 'producto', FILTER_VALIDATE_INT);
+header('Content-Type: application/json; charset=UTF-8');
+if (!$cod_pro) { echo json_encode([]); exit; }
 $vnom_pro = "";
 //Almacenar en $productoSelect el registro que corresponda con el valor de la variable $cod_pro
 $conexion = new Conexion();
-$consulta = $conexion->prepare('SELECT * FROM inventario where codigo = :codpro');
+$consulta = $conexion->prepare('SELECT nom_producto, precio_venta FROM inventario WHERE Codigo = :codpro');
 $consulta->bindParam(':codpro', $cod_pro);
 $consulta->execute();
 $registros = $consulta->fetchAll(PDO::FETCH_ASSOC);
@@ -19,6 +21,5 @@ if ($registros) {
             'preproducto' => $producto1['precio_venta']
         );
     }
-    $jsonstring = json_encode($json);
-    echo $jsonstring;
 }
+echo json_encode($json, JSON_UNESCAPED_UNICODE);

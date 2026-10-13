@@ -1,4 +1,4 @@
-<?php require 'menu.php'; ?>
+﻿<?php require 'menu.php'; ?>
 <main class="w3-container w3-mobile ">
     <div class="w3-content" style="max-width:80%">
         <div class="w3-container w3-row">

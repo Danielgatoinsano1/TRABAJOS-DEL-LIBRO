@@ -3,10 +3,10 @@ $(function () {
     $('#btnNueva').click(function () {
     $.ajax({
         url: 'obtenerfacturamax.php',
-        success: function (response) {
-            if (!response.error) {
+        dataType: 'json',
+        success: function (varfacturas) {
+            if (Array.isArray(varfacturas)) {
             let varultimafac = "";
-            let varfacturas = JSON.parse(response);
             varfacturas.forEach(varfacturas => {
                 varultimafac = varfacturas.ultimafactura;
             });
@@ -80,10 +80,10 @@ $(function () {
                     buscarcliente
                 },
                 type: 'POST',
-                success: function (response) {
-                    if (!response.error) {
+        dataType: 'json',
+        success: function (varclientes) {
+                    if (Array.isArray(varclientes)) {
                         let varnomcliente = "";
-                        let varclientes = JSON.parse(response);
                         varclientes.forEach(varclientes => {
                             varnomcliente = varclientes.nombrecliente;
                         });
@@ -116,11 +116,11 @@ $(function () {
                     producto
                 },
                 type: 'POST',
-                success: function (response) {
-                    if (!response.error) {
+                    dataType: 'json',
+                    success: function (varproductos) {
+                    if (Array.isArray(varproductos)) {
                         let varnomproducto = "";
                         let varpreciopro = "";
-                        let varproductos = JSON.parse(response);
                         varproductos.forEach(varproductos => {
                             varnomproducto = varproductos.nomproducto;
                             varpreciopro = varproductos.preproducto;

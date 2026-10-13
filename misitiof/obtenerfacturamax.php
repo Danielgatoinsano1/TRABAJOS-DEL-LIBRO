@@ -1,11 +1,8 @@
 <?php
 require_once 'classcontrolfactura.php';
 $registros = datos_movfactura::obtenerultimafactura();
+$ultimo = $registros[0]['factura'] ?? null;
 $json = array();
-foreach ($registros as $facturacion) {
-    $json[] = array(
-        'ultimafactura' => $facturacion['factura'],
-    );
-}
-$jsonstring = json_encode($json);
-echo $jsonstring;
+$json[] = array('ultimafactura' => $ultimo);
+header('Content-Type: application/json; charset=UTF-8');
+echo json_encode($json);

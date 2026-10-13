@@ -113,14 +113,15 @@ class datosProductos
         }
         $conexion = new Conexion();
         //Preparar la consulta
-        $consulta = $conexion->prepare('UPDATE ' . self::TABLA . 'SET stock = :p_stock where codigo = :codpro');
+        $consulta = $conexion->prepare('UPDATE ' . self::TABLA . ' SET stock = :p_stock WHERE Codigo = :codpro');
 
         //Asignar los valores
-        $consulta->bindParam(':producto', $nuevo_stock);
+        $consulta->bindValue(':p_stock', $nuevo_stock, PDO::PARAM_INT);
         $consulta->bindParam(':codpro', $v_idpro);
         $consulta->execute(); //Ejecutar la consulta
-        return $consulta;
-        $conexion = null; //Cerrar conexión
+        $filas = $consulta->rowCount();
+        $conexion = null;
+        return $filas;
     }
     public static function todosProductos()
     {
