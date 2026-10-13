@@ -13,7 +13,7 @@
     <script src="./JScript/html2pdf.bundle.min.js"></script>
     <!-- Script que generara el PDF -->
     <script src="./JScript/script.js"></script>
-    <title>Document</title>
+    <title>Factura</title>
 </head>
 <body class="w3-container w3-padding" style="width: 900px; margin: auto;">
 <button class="w3-button w3-teal" id="btnPdf">Clic para crear PDF</button>
@@ -56,9 +56,9 @@
         <div class="w3-container w3-cell" style="width: 600px;">
             <h2 class="w3-xxlarge w3-text-blue w3-padding-small"><strong>
             Factura</strong> </h2>
-            <p>Cliente: <?php echo ($clien); ?> </p>
+            <p>Cliente: <?php echo htmlspecialchars((string) $clien, ENT_QUOTES, 'UTF-8'); ?> </p>
             <p>Dirección: <?php echo ($direc); ?> </p>
-            <p>Teléfono: <?php echo ($tel); ?> </p>
+            <p>Teléfono: <?php echo htmlspecialchars((string) $tel, ENT_QUOTES, 'UTF-8'); ?> </p>
         </div>
         <div class="w3-container w3-cell">
             <p class="w3-xlarge">Factura No:</p>

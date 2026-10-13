@@ -37,7 +37,8 @@
                     <a href="#" class="w3-bar-item w3-button w3-mobile">Consultar y modificar productos</a>
                     <a href="frmcliente.php" class="w3-bar-item w3-button w3-mobile">Clientes</a>
                     <a href="frmMovimiento.php" class="w3-bar-item w3-button w3-mobile">Agregar Inventario</a>
-                    <a href="#" class="w3-bar-item w3-button w3-mobile">Facturar</a>
+                    <a href="frmFactura.php" class="w3-bar-item w3-button w3-mobile">Facturar</a>
+                    <a href="facturasguardadas.php" class="w3-bar-item w3-button w3-mobile">Facturas guardadas</a>
                     <a href="#" class="w3-bar-item w3-button w3-mobile">Informacion libros</a>
                 </div>
             </div>
