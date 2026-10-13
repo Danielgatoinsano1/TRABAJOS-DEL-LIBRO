@@ -53,6 +53,30 @@ CREATE TABLE IF NOT EXISTS `detalle_factura` (
   CONSTRAINT `fk_detalle_producto` FOREIGN KEY (`Codigo`) REFERENCES `inventario` (`Codigo`) ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- Tablas de facturación usadas por el flujo descrito en el libro.
+CREATE TABLE IF NOT EXISTS `controlfactura` (
+  `nofactura` INT UNSIGNED NOT NULL,
+  `codclientefact` INT NOT NULL,
+  `subtotalfact` DECIMAL(12,2) NOT NULL DEFAULT 0,
+  `impuestofact` DECIMAL(12,2) NOT NULL DEFAULT 0,
+  `grantotalfact` DECIMAL(12,2) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`nofactura`),
+  KEY `idx_controlfactura_cliente` (`codclientefact`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS `movimientofactura` (
+  `idmovfactura` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `facturano` INT UNSIGNED NOT NULL,
+  `clienteid` INT NOT NULL,
+  `productoid` INT UNSIGNED NOT NULL,
+  `cantfact` INT UNSIGNED NOT NULL,
+  `precifact` DECIMAL(12,2) NOT NULL,
+  `totalfact` DECIMAL(12,2) NOT NULL,
+  PRIMARY KEY (`idmovfactura`),
+  KEY `idx_movimientofactura_factura` (`facturano`),
+  KEY `idx_movimientofactura_producto` (`productoid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- Datos mínimos de demostración solo cuando las tablas están vacías.
 INSERT INTO `clientes` (`nomcli`, `direccli`, `email_cli`)
 SELECT 'Cliente de prueba', 'Domicilio de prueba', 'prueba@example.com'

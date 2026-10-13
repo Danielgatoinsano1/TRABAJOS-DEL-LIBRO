@@ -1,18 +1,24 @@
 <?php
 require_once 'conexionf2.php';
-header('Content-Type: application/json; charset=utf-8');
-try {
-    $codigo = filter_input(INPUT_POST, 'producto', FILTER_VALIDATE_INT);
-    if (!$codigo) { echo json_encode([]); exit; }
-    $conexion = new Conexion();
-    $consulta = $conexion->prepare('SELECT nom_producto, precio_venta FROM inventario WHERE Codigo = :codigo');
-    $consulta->execute([':codigo' => $codigo]);
-    $producto = $consulta->fetch(PDO::FETCH_ASSOC);
-    echo json_encode($producto ? [[
-        'nomproducto' => $producto['nom_producto'],
-        'preproducto' => $producto['precio_venta']
-    ]] : [], JSON_UNESCAPED_UNICODE);
-} catch (Throwable $error) {
-    http_response_code(500);
-    echo json_encode(['error' => true, 'mensaje' => 'No fue posible consultar el producto.']);
+//Almacenar en $cod_pr el valor de la variable dato recibida por el metodo GET
+$cod_pro = $_POST['producto'];
+$vnom_pro = "";
+//Almacenar en $productoSelect el registro que corresponda con el valor de la variable $cod_pro
+$conexion = new Conexion();
+$consulta = $conexion->prepare('SELECT * FROM inventario where codigo = :codpro');
+$consulta->bindParam(':codpro', $cod_pro);
+$consulta->execute();
+$registros = $consulta->fetchAll(PDO::FETCH_ASSOC);
+
+$json = array();
+if ($registros) {
+    foreach ($registros as $producto1) {
+        //Almacenar en la variable $vnom_pro el nombre del producto
+        $json[] = array(
+            'nomproducto' => $producto1['nom_producto'],
+            'preproducto' => $producto1['precio_venta']
+        );
+    }
+    $jsonstring = json_encode($json);
+    echo $jsonstring;
 }

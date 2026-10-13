@@ -1,28 +1,22 @@
 <?php
 require_once 'conexionf2.php';
+//Almacenar en $cod_cli el valor de la variable buscarcliente recibida por el metodo POST
+$cod_cli = $_POST['buscarcliente'];
+//Realizar la consulta
+$conexion = new Conexion();
+$consulta = $conexion->prepare('SELECT * FROM clientes where idcli = :codcli');
+$consulta->bindParam(':codcli', $cod_cli);
+$consulta->execute();
+$registros = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
-header('Content-Type: application/json; charset=utf-8');
-
-$codigo = filter_input(INPUT_POST, 'buscarcliente', FILTER_VALIDATE_INT);
-if (!$codigo) {
-    echo json_encode([]);
-    exit;
-}
-
-try {
-    $conexion = new Conexion();
-    $consulta = $conexion->prepare(
-        'SELECT nomcli FROM clientes WHERE idcli = :idcli LIMIT 1'
-    );
-    $consulta->bindValue(':idcli', $codigo, PDO::PARAM_INT);
-    $consulta->execute();
-    $cliente = $consulta->fetch(PDO::FETCH_ASSOC);
-
-    echo json_encode(
-        $cliente ? [['nombreCliente' => $cliente['nomcli']]] : [],
-        JSON_UNESCAPED_UNICODE
-    );
-} catch (Throwable $error) {
-    http_response_code(500);
-    echo json_encode(['error' => 'No se pudo consultar el cliente.']);
+$json = array();
+if ($registros) {
+    foreach ($registros as $cliente) {
+        //Almacenar en la variable $vnom_pro l nombre del producto
+        $json[] = array(
+            'nombrecliente' => $cliente['nomcli'],
+        );
+    }
+    $jsonstring = json_encode($json);
+    echo $jsonstring;
 }
