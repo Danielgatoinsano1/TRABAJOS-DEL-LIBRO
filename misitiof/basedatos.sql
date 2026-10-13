@@ -24,12 +24,28 @@ CREATE TABLE IF NOT EXISTS `inventario` (
   PRIMARY KEY (`Codigo`), KEY `idx_inventario_producto` (`nom_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Normaliza instalaciones antiguas de inventario que carecen de clave primaria.
-ALTER TABLE `inventario` MODIFY `Codigo` INT UNSIGNED NOT NULL AUTO_INCREMENT;
+-- Agrega primero la clave: MariaDB requiere un índice para AUTO_INCREMENT.
 SET @sql_pk = (SELECT IF(COUNT(*) = 0, 'ALTER TABLE `inventario` ADD PRIMARY KEY (`Codigo`)', 'SELECT 1') FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = 'inventario' AND index_name = 'PRIMARY');
 PREPARE sentencia_pk FROM @sql_pk;
 EXECUTE sentencia_pk;
 DEALLOCATE PREPARE sentencia_pk;
+ALTER TABLE `inventario` MODIFY `Codigo` INT UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE `inventario`
+  MODIFY `costo` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  MODIFY `porc_venta` DECIMAL(6,2) NOT NULL DEFAULT 0.00,
+  MODIFY `precio_venta` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  MODIFY `imagen` VARCHAR(255) DEFAULT NULL;
+CREATE TABLE IF NOT EXISTS `movimientos` (
+  `id_movimiento` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_producto` INT UNSIGNED NOT NULL,
+  `fecha_movimiento` DATE NOT NULL,
+  `cantidad_movi` INT NOT NULL,
+  PRIMARY KEY (`id_movimiento`),
+  KEY `idx_movimientos_producto` (`id_producto`),
+  CONSTRAINT `fk_movimientos_producto`
+    FOREIGN KEY (`id_producto`) REFERENCES `inventario` (`Codigo`)
+    ON UPDATE CASCADE ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 CREATE TABLE IF NOT EXISTS `factura` (
   `idfactura` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `idcli` INT NOT NULL,
@@ -51,30 +67,6 @@ CREATE TABLE IF NOT EXISTS `detalle_factura` (
   PRIMARY KEY (`iddetalle`), KEY `idx_detalle_factura` (`idfactura`), KEY `idx_detalle_producto` (`Codigo`),
   CONSTRAINT `fk_detalle_factura` FOREIGN KEY (`idfactura`) REFERENCES `factura` (`idfactura`) ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT `fk_detalle_producto` FOREIGN KEY (`Codigo`) REFERENCES `inventario` (`Codigo`) ON UPDATE CASCADE ON DELETE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- Tablas de facturación usadas por el flujo descrito en el libro.
-CREATE TABLE IF NOT EXISTS `controlfactura` (
-  `nofactura` INT UNSIGNED NOT NULL,
-  `codclientefact` INT NOT NULL,
-  `subtotalfact` DECIMAL(12,2) NOT NULL DEFAULT 0,
-  `impuestofact` DECIMAL(12,2) NOT NULL DEFAULT 0,
-  `grantotalfact` DECIMAL(12,2) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`nofactura`),
-  KEY `idx_controlfactura_cliente` (`codclientefact`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE IF NOT EXISTS `movimientofactura` (
-  `idmovfactura` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `facturano` INT UNSIGNED NOT NULL,
-  `clienteid` INT NOT NULL,
-  `productoid` INT UNSIGNED NOT NULL,
-  `cantfact` INT UNSIGNED NOT NULL,
-  `precifact` DECIMAL(12,2) NOT NULL,
-  `totalfact` DECIMAL(12,2) NOT NULL,
-  PRIMARY KEY (`idmovfactura`),
-  KEY `idx_movimientofactura_factura` (`facturano`),
-  KEY `idx_movimientofactura_producto` (`productoid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Datos mínimos de demostración solo cuando las tablas están vacías.

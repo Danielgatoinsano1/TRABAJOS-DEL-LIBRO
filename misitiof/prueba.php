@@ -1,6 +1,4 @@
 <?php
 require_once 'fclases.php';
-$persona=new datospersona('100111','Daniel Perez','Dubai'); //Crear el objeto
-echo $persona->get_codigo();
-echo $persona->get_nombre();
-echo $persona->get_direccion(); //Imprimir el codigo
+$persona= new datospersona('0301199901942', ' Hector Maldonado ', 'New York');
+echo $persona-> get_codigo(); echo $persona-> get_nombre(); echo $persona-> get_direccion();
