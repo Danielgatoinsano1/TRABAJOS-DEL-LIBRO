@@ -1,0 +1,61 @@
+﻿RESUMEN: PAGINACIÓN, EDICIÓN Y ELIMINACIÓN DE PRODUCTOS
+
+En cproductos.php implementé un sistema para consultar los productos de la tabla inventario. La página muestra cinco productos por sección y contiene botones para editar o eliminar cada registro.
+
+1. PAGINACIÓN
+
+Primero obtengo la página actual mediante $_GET[''pagina'']. Si no se recibe una página, se utiliza la número 1:
+$pagina = isset($_GET[''pagina'']) ? max(1, (int) $_GET[''pagina'']) : 1;
+
+Después establezco que se mostrarán cinco productos por página y cuento el total de registros:
+$cantidad = 5;
+$totalRegistros = modificarProducto::totalRegistros();
+
+Calculo el número de páginas dividiendo el total de productos entre la cantidad mostrada por página. ceil() redondea hacia arriba:
+$numeroPaginas = max(1, (int) ceil($totalRegistros / $cantidad));
+
+Luego calculo desde qué registro debe comenzar la consulta:
+$inicio = ($pagina - 1) * $cantidad;
+
+Finalmente, consulto los productos de la página actual:
+$productos = modificarProducto::limitarRegistros($inicio, $cantidad);
+
+En manipularproductos.php se usa:
+SELECT * FROM inventario ORDER BY nom_producto LIMIT :inicio, :cantidad
+
+El paginador tiene botones anterior, números de página y siguiente. Los botones se desactivan cuando no se puede avanzar o retroceder, y la página actual se muestra con otro color.
+
+2. EDICIÓN
+
+Cada producto tiene un botón que envía su código a editproducto.php?codigo=...
+
+ConsultarProducto.php recibe y valida el código, busca el producto y carga sus datos. editproducto.php muestra esos datos en un formulario; el código es de solo lectura.
+
+Al enviar el formulario, actualizarproducto.php:
+1. Comprueba que sea una solicitud POST.
+2. Valida código, nombre, costo, porcentaje y fecha.
+3. Revisa la imagen nueva si fue seleccionada.
+4. Acepta solamente JPG, PNG o GIF.
+5. Calcula el precio de venta.
+6. Llama al método actualizar().
+
+El precio se calcula así:
+$precio = round($costo + ($costo * $porcentaje / 100), 2);
+
+Después se ejecuta:
+UPDATE inventario SET nom_producto=:nombre, costo=:costo, porc_venta=:porcentaje, precio_venta=:precio, fecha=:fecha WHERE Codigo=:codigo
+
+La imagen solo se actualiza si se selecciona una nueva. Al terminar, el sistema regresa a cproductos.php y muestra un mensaje.
+
+3. ELIMINACIÓN
+
+El botón envía el código a eliminarproducto.php?codigo=... y JavaScript solicita confirmación con confirm(''¿Deseas eliminar este producto?'').
+
+eliminarproducto.php valida el código y llama al método eliminar(), que ejecuta:
+DELETE FROM inventario WHERE Codigo = :codigo
+
+Después, el sistema regresa a cproductos.php y muestra si la operación fue correcta.
+
+CONCLUSIÓN
+
+Con este código conseguí mostrar productos en grupos de cinco, modificar sus datos y eliminarlos. También utilicé validaciones, consultas preparadas con PDO, mensajes de estado y confirmaciones para hacer las operaciones más seguras y fáciles de usar.
