@@ -1,60 +1,116 @@
 <?php
-require_once 'conexionf.php';
+require 'conexionf.php';
+//Declarar variables
+$v_ccodigo = ""; //Recogerá el código
+$v_nproducto = ""; //Recogerá el nombre del producto
+$v_costop = ""; //Se almacenará el costo
+$v_porcentajev = ""; //Aquí se almacenará el porcentaje de venta
+$v_pventa = ""; //Recogerá el precio de venta
+$v_fecha_creacion = ""; //Recogerá la fecha
+$v_simagen = ""; //Se utilizará para recoger la imagen
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['cguardar'])) {
-    header('Location: cproductos.php');
-    exit;
+//Función para escapar los datos
+function filtrofares($dat_fares)
+{
+    $datos = trim($dat_fares); // Elimina espacios antes y después de los datos
+    $datos = stripslashes($dat_fares); // Elimina backslashes "\\"
+    $datos = htmlspecialchars($dat_fares); // Traduce caracteres especiales en entidades HTML
+    return $datos;
 }
 
-$codigo = filter_input(INPUT_POST, 'codigo', FILTER_VALIDATE_INT);
-$nombre = trim((string) ($_POST['nproducto'] ?? ''));
-$costo = filter_input(INPUT_POST, 'costop', FILTER_VALIDATE_FLOAT);
-$porcentaje = filter_input(INPUT_POST, 'porcentajev', FILTER_VALIDATE_FLOAT);
-$precio = filter_input(INPUT_POST, 'pventa', FILTER_VALIDATE_FLOAT);
-$fecha = trim((string) ($_POST['fecha_creacion'] ?? ''));
+function guardaimagen()
+{
+    if (isset($_POST['cguardar'])) {
+        $vcodigo = ""; //Declakrar variable
+        if (!empty($_POST["codigo"])) { //Si el campo código es distinto de vacío entonces
+            //Almacenar en la variable $vcodigo el valor del código
+            //que ingresó el usuario ya filtrado
+            $vcodigo = filtrofares($_POST["codigo"]);
+        }
 
-if (!$codigo || $nombre === '' || preg_match_all('/./us', $nombre) > 50 || $costo === false || $costo === null || $costo < 0
-    || $porcentaje === false || $porcentaje === null || $porcentaje < 0 || $precio === false || $precio === null || $precio < 0) {
-    http_response_code(400);
-    exit('Revisa el código, nombre y precios del producto.');
-}
-if ($fecha === '') $fecha = date('Y-m-d');
-$fechaValida = DateTime::createFromFormat('!Y-m-d', $fecha);
-if (!$fechaValida || $fechaValida->format('Y-m-d') !== $fecha) {
-    http_response_code(400);
-    exit('La fecha no es válida.');
-}
+        //Almacenar el nombre de la imagen en la variable $archivo
+        $archivo = $_FILES['simagen']['name'];
+        //Si archivo tiene información y es diferente de vacío entonces
+        if (isset($archivo) && $archivo != "") {
+            $tipo = $_FILES['simagen']['type']; // Obtener el tipo de archivo
+            $temp = $_FILES['simagen']['tmp_name']; // Obtener el nombre temporal del archivo
 
-$imagen = null;
-if (isset($_FILES['simagen']) && $_FILES['simagen']['error'] !== UPLOAD_ERR_NO_FILE) {
-    if ($_FILES['simagen']['error'] !== UPLOAD_ERR_OK || !is_uploaded_file($_FILES['simagen']['tmp_name'])) {
-        http_response_code(400);
-        exit('No se pudo recibir la imagen.');
+            // Si la imagen seleccionada no es del tipo correcto, devolver null
+            if (!(strpos($tipo, "gif") || strpos($tipo, "jpeg") || strpos($tipo, "jpg") || strpos($tipo, "png"))) {
+                return null; // Retornar null
+            } else {
+                // Almacenar la extensión del archivo en la variable $extension
+                $extension = pathinfo($_FILES['simagen']['name'], PATHINFO_EXTENSION);
+                // Concatenar en $nuevonombre el código + punto + extensión
+                $nuevonombre = $vcodigo . "." . $extension;
+
+                // Subir el archivo conservando el tamaño y tipo
+                if (move_uploaded_file($temp, "imgfares/" . $nuevonombre)) {
+                    // Cambiamos los permisos del archivo a 777 para poder modificarlo posteriormente
+                    chmod("imgfares/" . $nuevonombre, 0777);
+                    return $nuevonombre; // Retornar el nombre de la imagen
+                } else { // Si la imagen no se guardó
+                    return null; // Retornar null a la función
+                }
+            }
+        }
     }
-    $mime = (new finfo(FILEINFO_MIME_TYPE))->file($_FILES['simagen']['tmp_name']);
-    $extensiones = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/gif' => 'gif'];
-    if (!isset($extensiones[$mime])) {
-        http_response_code(400);
-        exit('La imagen debe ser JPG, PNG o GIF.');
-    }
-    $imagen = $codigo . '.' . $extensiones[$mime];
-    $directorio = __DIR__ . DIRECTORY_SEPARATOR . 'imgfares';
-    if (!is_dir($directorio) || !move_uploaded_file($_FILES['simagen']['tmp_name'], $directorio . DIRECTORY_SEPARATOR . $imagen)) {
-        http_response_code(500);
-        exit('No se pudo guardar la imagen.');
-    }
+   
 }
 
-try {
-    $conexion = conect();
-    if (!$conexion) throw new RuntimeException('No hay conexión con la base de datos.');
-    $sql = 'INSERT INTO inventario (Codigo, nom_producto, costo, porc_venta, precio_venta, fecha, imagen) VALUES (:codigo, :nombre, :costo, :porcentaje, :precio, :fecha, :imagen)';
-    $stmt = $conexion->prepare($sql);
-    $stmt->execute([':codigo' => $codigo, ':nombre' => $nombre, ':costo' => $costo, ':porcentaje' => $porcentaje, ':precio' => $precio, ':fecha' => $fecha, ':imagen' => $imagen]);
-    header('Location: productospaginados.php');
-    exit;
-} catch (Throwable $error) {
-    error_log('Error al guardar producto: ' . $error->getMessage());
-    http_response_code(500);
-    echo 'No se pudo guardar el producto. Comprueba que el código no esté repetido.';
-}
+// Verificar si los datos fueron enviados desde el método _post
+if (isset($_POST["cguardar"]) && $_SERVER["REQUEST_METHOD"] == "POST") {
+    if (!empty($_POST["codigo"])) { // Si el código no está vacío entonces
+        // Almacenar en la variable $v_ccodigo el valor del código que ingresó el usuario ya filtrado
+        $v_ccodigo = filtrofares($_POST["codigo"]);
+    }
+
+    if (!empty($_POST["nproducto"])) {
+        $v_nproducto = filtrofares($_POST["nproducto"]);
+    }
+
+    if (!empty($_POST["costop"])) {
+        $v_costop = filtrofares($_POST["costop"]);
+    }
+
+    if (!empty($_POST["porcentajev"])) {
+        $v_porcentajev = filtrofares($_POST["porcentajev"]);
+    }
+
+    if (!empty($_POST["pventa"])) {
+        $v_pventa = filtrofares($_POST["pventa"]);
+    }
+
+    if (!empty($_POST["fecha_creacion"])) {
+    $v_fecha_creacion = filtrofares($_POST["fecha_creacion"]);
+    }
+    $v_simagen = guardaimagen(); // Ejecutar función guardaimagen() y almacenar el resultado en $v_simagen
+    $conexion = conect(); // Conectar con la base de datos
+
+    try {
+        // Almacenar la consulta en la variable sql
+        $sql = "INSERT INTO inventario (codigo, nom_producto, costo, porc_venta,
+                 precio_venta, fecha, Imagen, stock)
+                VALUES (:codigo, :nproducto, :costop, :porcentajev,
+                        :pventa, :fecha_creacion, :simagen, 0)";
+        $consulta = $conexion->prepare($sql);
+        $consulta->bindParam(':codigo', $v_ccodigo);
+        $consulta->bindParam(':nproducto', $v_nproducto);
+        $consulta->bindParam(':costop', $v_costop);
+        $consulta->bindParam(':porcentajev', $v_porcentajev);
+        $consulta->bindParam(':pventa', $v_pventa);
+        $consulta->bindParam(':fecha_creacion', $v_fecha_creacion);
+        $consulta->bindParam(':simagen', $v_simagen);
+        $consulta->execute(); // Ejecutar la consulta
+      
+        } catch (PDOException $e) {
+            // Manejar el error si ocurre
+          
+            echo $e->getMessage();
+        }
+        $conexion = null; // Cerrar la conexión
+        }
+
+    header("Location: cproductos.php"); // Redirigir a cproductos.php
+
+    ?>
