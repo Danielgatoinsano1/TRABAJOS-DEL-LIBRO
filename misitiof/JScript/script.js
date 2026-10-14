@@ -1,21 +1,24 @@
-window.addEventListener("load", iniciarf);
-function iniciarf() {
-    //Capturar el evento click del boton btnPdf y ejecutar la funcion crearPDF()
-    btnPdf.addEventListener("click", crearPDF);
-}
-function crearPDF(){
-    //Capturar el elemento HTML, en este ejemplo se
-    //captura el body y se asigna a la constante elementoHTMLaConvertir
-    const $elementoHTMLaConvertir = document.body;
-    html2pdf() //Inicializar el proceso de configuracion
-        .set({
-            margin: 0,
-            filename: 'facturaFares.pdf',
-            image: { type: 'jpeg', quality: 0.98
-            },
-            html2canvas: { scale: 1, letterRendering: true, },
-            jsPDF: { unit: "in", format: "letter", orientation: 'landscape'}
-        })
-        .from($elementoHTMLaConvertir) //Asignar el elemento a convertir
-        .save() //Guardar el documento
-}
+window.addEventListener('DOMContentLoaded', () => {
+    const botonPdf = document.getElementById('btnPdf');
+    const contenido = document.getElementById('documentoFactura') || document.body;
+
+    if (!botonPdf || !contenido) return;
+
+    botonPdf.addEventListener('click', () => {
+        if (typeof window.html2pdf !== 'function') {
+            window.alert('No se pudo cargar la biblioteca para crear el PDF.');
+            return;
+        }
+
+        window.html2pdf()
+            .set({
+                margin: 0,
+                filename: 'facturaFares.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 1, letterRendering: true },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' }
+            })
+            .from(contenido)
+            .save();
+    });
+});
