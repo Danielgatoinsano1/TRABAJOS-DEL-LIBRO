@@ -1,114 +1,60 @@
+<?php
+require_once 'cargarfactura.php';
+$factura = $registros[0];
+$salidaSegura = static fn($valor): string => htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="./EstilosCssF/dcoloresf.css">
-    <link rel="stylesheet" type="text/css" href="./EstilosCssF/w3.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
-    <script src="./JScript/acciones_script.js"></script>
-    <script src="./JScript/jquery-3.6.0.min.js"></script>
-    <!-- Cargar la libreria-->
-    <script src="./JScript/html2pdf.bundle.min.js"></script>
-    <!-- Script que generara el PDF -->
-    <script src="./JScript/script.js"></script>
-    <title>Factura</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Factura <?php echo $salidaSegura($factura['facturano']); ?></title>
+    <link rel="stylesheet" href="EstilosCssF/w3.css">
+    <link rel="stylesheet" href="EstilosCssF/dcoloresf.css">
+    <script src="JScript/html2pdf.bundle.min.js"></script>
+    <script src="JScript/script.js" defer></script>
+    <style>
+        body { background: #f5f5f5; }
+        .factura-papel { max-width: 900px; margin: 20px auto; background: #fff; }
+        @media print { .no-imprimir { display: none !important; } body { background: #fff; } }
+    </style>
 </head>
-<body class="w3-container w3-padding" style="width: 900px; margin: auto;">
-<button class="w3-button w3-teal" id="btnPdf">Clic para crear PDF</button>
-    <?php require_once 'cargarfactura.php';
-    $idfact = "";
-    $clien = "";
-    $direc = "";
-    $tel = "";
-    $sub = "";
-    $imp = "";
-    $gtot = "";
-    foreach ($registros as $dfactura) {
-        $idfact = $dfactura['facturano'];
-        $clien = $dfactura['nomcli'];
-        $direc = $dfactura['direccli'];
-        $tel = $dfactura['telres_cli'];
-        $sub = $dfactura['subtotalfact'];
-        $imp = $dfactura['impuestofact'];
-        $gtot = $dfactura['grantotalfact'];
-    }
-    ?>
-    <div class="w3-container w3-row">
-        <div class="w3-container w3-cell" style="width: 200px;">
-            <img src="./imgfares/logofares.png" alt="">
-        </div>
-        <div class="w3-container w3-cell">
-            <p>
-                <strong>Ediciones Fares</strong><br>
-                <strong>Tegucigalpa, Honduras C.A.</strong>
-            </p>
-        </div>
-        <div class="w3-container w3-cell">
-            <p>
-                www.edicionesfares.com<br>
-                Email: edicionesfares@edicionesfares.com<br>
-            </p>
-        </div>
-    </div>
-    <div class="w3-cell-row w3-border">
-        <div class="w3-container w3-cell" style="width: 600px;">
-            <h2 class="w3-xxlarge w3-text-blue w3-padding-small"><strong>
-            Factura</strong> </h2>
-            <p>Cliente: <?php echo htmlspecialchars((string) $clien, ENT_QUOTES, 'UTF-8'); ?> </p>
-            <p>Dirección: <?php echo ($direc); ?> </p>
-            <p>Teléfono: <?php echo htmlspecialchars((string) $tel, ENT_QUOTES, 'UTF-8'); ?> </p>
-        </div>
-        <div class="w3-container w3-cell">
-            <p class="w3-xlarge">Factura No:</p>
-            <p class="w3-xxlarge w3-text-red"><strong><?php echo ($idfact); ?>
-            </strong> </p>
-        </div>
-    </div>
-    <div>
-        <table class="tabla w3-table w3-bordered" style="width: 100%;">
-            <tr>
-                <th style="width: 15%;">Cantidad</th>
-                <th style="width: 50%;">Descripción</th>
-                <th style="width: 15%;">Precio</th>
-                <th style="width: 20%;">Total</th>
-            </tr>
-            <tbody>
-                <?php
-                //Recorrer la matriz
-                foreach ($registros as $dfactura) { ?>
-                    <tr>
-                        <!-- Mostrar el id del alumno que está dentro de $cliente -->
-                        <td> <?php echo $dfactura['cantfact']; ?></td>
-                        <!-- Mostrar el nombre del alumno que está dentro de $cliente -->
-                        <td> <?php echo $dfactura['nom_producto']; ?></td>
-                        <td> <?php echo $dfactura['precifact']; ?></td>
-                        <td> <?php echo $dfactura['totalfact']; ?></td>
-                    </tr>
-                <?php
-                } //Cerrar el foreach
-                ?>
-            </tbody> <!-- Cerrar el cuerpo de la tabla -->
-        </table>
-        <div class="w3-row w3-panel w3-border-top ">
-            <div class="w3-mobile w3-container w3-right w3-border-left"
-            style="width:400px;">
-                <div class="w3-container w3-mobile w3-right">
-                    <p>Subtotal: </p>
-                    <p id="sutotalfact" class="w3-border w3-sand "> <?php echo ($sub); ?> </p>
-                </div>
-                <div class="w3-container w3-mobile w3-right">
-                    <p>IVA:</p>
-                    <p class="w3-border w3-sand "><?php echo ($imp); ?></p>
-                </div>
-                <div class="w3-container w3-mobile w3-right">
-                    <p>Total a pagar:</p>
-                    <p class="w3-border w3-sand"><?php echo ($gtot); ?></p>
-                </div>
+<body class="w3-container w3-padding">
+    <button class="w3-button w3-teal no-imprimir" id="btnPdf" type="button">Clic para crear PDF</button>
+    <main id="documentoFactura" class="w3-container w3-padding factura-papel">
+        <header class="w3-row w3-padding w3-border-bottom">
+            <div class="w3-third"><strong class="w3-xlarge">Ediciones Fares</strong></div>
+            <div class="w3-third"><strong>Ediciones Fares</strong><br>Tegucigalpa, Honduras C.A.</div>
+            <div class="w3-third">www.edicionesfares.com<br>Email: edicionesfares@edicionesfares.com</div>
+        </header>
+        <section class="w3-row w3-padding w3-border">
+            <div class="w3-twothird">
+                <h1 class="w3-text-blue">Factura</h1>
+                <p>Cliente: <?php echo $salidaSegura($factura['nomcli']); ?></p>
+                <p>Dirección: <?php echo nl2br($salidaSegura($factura['direccli'])); ?></p>
+                <p>Teléfono: <?php echo $salidaSegura($factura['telres_cli']); ?></p>
             </div>
-        </div>
-
-    </div>
+            <div class="w3-third"><p class="w3-xlarge">Factura No:</p><strong class="w3-xxxlarge w3-text-red"><?php echo $salidaSegura($factura['facturano']); ?></strong></div>
+        </section>
+        <table class="w3-table w3-bordered w3-margin-top">
+            <thead><tr><th>Cantidad</th><th>Descripción</th><th>Precio</th><th>Total</th></tr></thead>
+            <tbody>
+            <?php foreach ($registros as $detalle) { ?>
+                <tr>
+                    <td><?php echo $salidaSegura($detalle['cantfact']); ?></td>
+                    <td><?php echo $salidaSegura($detalle['nom_producto']); ?></td>
+                    <td><?php echo number_format((float) $detalle['precifact'], 2); ?></td>
+                    <td><?php echo number_format((float) $detalle['totalfact'], 2); ?></td>
+                </tr>
+            <?php } ?>
+            </tbody>
+        </table>
+        <section class="w3-row w3-padding w3-border-top">
+            <div class="w3-third w3-right"><p>Total a pagar: <strong><?php echo number_format((float) $factura['grantotalfact'], 2); ?></strong></p>
+                <p>IVA: <?php echo number_format((float) $factura['impuestofact'], 2); ?></p>
+                <p>Subtotal: <?php echo number_format((float) $factura['subtotalfact'], 2); ?></p>
+            </div>
+        </section>
+    </main>
 </body>
 </html>

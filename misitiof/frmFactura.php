@@ -2,8 +2,12 @@
 
 <main class="w3-container w3-mobile">
     <div class="w3-content" style="max-width: 80%">
-        <div class="w3-container w3-col w3-teal">
-            <h3>Sistema de Facturación</h3>
+        <div class="w3-container w3-col w3-teal" style="display: flex; align-items: stretch; padding: 0">
+            <h3 style="flex: 7; margin: 0; padding: 16px 20px">Sistema de Facturación</h3>
+            <div style="flex: 3; display: flex; align-items: center; justify-content: space-around; gap: 8px; box-sizing: border-box; padding: 12px 16px; background: #2196f3; color: #102a43; font-size: 20px">
+                <span>Factura No. 1.</span>
+                <strong id="numfactura">0000</strong>
+            </div>
         </div>
 
         <form action="guardarfactura.php" method="post" id="formFactura">
@@ -28,25 +32,12 @@
                 <div class="w3-col" style="width: 70%">
                     <button id="btnNueva" class="w3-button w3-teal" type="button">Nueva factura</button>
                     <input id="guarfact" class="w3-btn w3-teal" type="submit" value="Guardar factura">
-                    <strong>Factura No. <span id="numfactura">0000</span></strong>
                 </div>
-                <div class="w3-rest">
+                <div class="w3-col" style="width: 30%">
                     <label for="subtotalfact">Subtotal:</label>
                     <input type="text" id="subtotalfact" name="subtotalfact" class="w3-input w3-border w3-sand" readonly>
-                </div>
-            </div>
-
-            <div class="w3-row">
-                <div class="w3-col" style="width: 70%"></div>
-                <div class="w3-rest">
                     <label for="impuestofact">IVA:</label>
                     <input type="text" id="impuestofact" name="impuestofact" class="w3-input w3-border w3-sand" readonly>
-                </div>
-            </div>
-
-            <div class="w3-row">
-                <div class="w3-col" style="width: 70%"></div>
-                <div class="w3-rest">
                     <label for="todpagarfact">Total a pagar:</label>
                     <input type="text" id="todpagarfact" name="todpagarfact" class="w3-input w3-border w3-sand" readonly>
                 </div>

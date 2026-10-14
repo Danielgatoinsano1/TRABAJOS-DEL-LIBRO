@@ -1,72 +1,76 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="./imgfares/favicon.jpg" type="image/jpg" 
-    sizes="16x16">
+    <link rel="icon" href="./imgfares/FAVICON.jpg" type="image/jpg" sizes="16x16">
+    <link rel="stylesheet" type="text/css" href="./EstilosCssF/w3.css">
     <link rel="stylesheet" type="text/css" href="./EstilosCssF/dcoloresf.css">
     <link rel="stylesheet" type="text/css" href="./EstilosCssF/diseñocssf.css">
-    <script src="./JScript/acciones_script.js"></script>
+    <script src="./JScript/acciones_script.JS" defer></script>
     <title>Inventario-Fares</title>
 </head>
 
-
 <body>
-    <header id="titulo1" class="fcolor-d5"> 
+    <header id="titulo1" class="fcolor-d5">
         <h1>Ediciones Fares</h1>
     </header>
-    <nav class="fcolor-l4">
-        <ul>
-            <li><a href="#">Principal</a></li>
-            <li><a href="#">Libros</a></li>
-            <li class="f-desplegable">
-                <a href="#" class="btndesplegable">Inventario</a>
-                <div class="cont-desplegable">
-                    <a href="cproductos.php">Crear producto</a>
-                    <!-- Por el nombre del nuevo archivo: -->
-                    <a href="productospaginados.php">Consultar producto</a>
-                </div>
-            </li>
-            <li><a href="#">Contacto</a></li>
-        </ul>
-    </nav>
+    <?php require 'navegacion.php'; ?>
+    
     <section class="fcolor-l1 seccion-form">
-    <div class="s-encabezado">
-        <h2>Inventario</h2>
-    </div>
-    <form class="fcolor-l5" action="guardar.php" method="post" enctype="multipart/form-data" autocomplete="off">
-<div id="codnom">
-            <label class="codnom1">Codigo: <input type="text" name="codigo" pattern="[0-9]{3,}"
-            placeholder="Ingresar solo numeros" size="12" autofocus required> </label>
-        <label class="codnom1">Producto: <input type="text" class="campof" name="nproducto" id="nproducto" pattern="[A-Za-z\s]{3,100}"
-        placeholder="Ingresar solo letras" size="45" 
+        <div class="s-encabezado">
+            <h2>Inventario</h2>
+        </div>
+    <br><br>
+    <?php if (isset($_GET['estado']) && is_string($_GET['estado'])) { ?>
+        <?php $estadoProducto = $_GET['estado']; ?>
+        <div class="w3-panel <?php echo $estadoProducto === 'guardado' ? 'w3-pale-green' : 'w3-pale-red'; ?>">
+            <?php
+            $mensajes = [
+                'guardado' => 'El producto se guardó correctamente.',
+                'codigo_existe' => 'Ese código de producto ya está registrado.',
+                'imagen_error' => 'No se pudo procesar la imagen. Usa JPG, PNG o GIF.',
+                'error' => 'No se pudo guardar el producto. Revisa los datos e inténtalo nuevamente.',
+            ];
+            echo htmlspecialchars($mensajes[$estadoProducto] ?? $mensajes['error'], ENT_QUOTES, 'UTF-8');
+            ?>
+        </div>
+    <?php } ?>
+    <form class="fcolor-l5" action="guardarproducto.php" method="post" enctype="multipart/form-data" autocomplete="off">
+        <div id="codnom">
+        <label class="codnom1">Código: <input type="number" name="codigo" id="codigo" min="1" step="1"
+        placeholder="Ingresar Codigo" size="12" autofocus required> </label>
+        <label class="codnom1">Producto:
+        <input type="text" class="campof" name="nproducto" id="nproducto"
+        minlength="3" maxlength="50" placeholder="Ingrese nombre del producto" size="50"
         required> </label>
-</div>
-<div id="cospor">
-    <label class="codnom1">Costo: <input type="text" name="costop" id="costop"
-pattern="[0-9]+([,\.][0-9]+)?"> </label>
-<label class="codnom1">Porcentaje de venta: <input type="text" class="campof" name="porcentajev" id="porcentajev"
-maxlength="3" size="4"> </label>
-</div>
-<div id="prefecha">
-    <label class="codnom1">Precio de venta: <input type="text" class="campof" name="pventa" id="pventa"
-readonly> </label>
-<label class="codnom1"> Fecha: <input type="date" class="campof" name="fecha_creacion"
-id="fecha_creacion"> </label>
-</div>
-<div id="csimagen"><br>
-    <img src="" width="200px" alt="Imagen del producto...">
-</div>
-<div id="botonimg">
-    <input type="file" class="campof" name="simagen" id="simagen">
-</div>
-<input type="submit" name="cguardar" id="cguardar" value="Guardar">
+        </div>
+        
+        <div id="cospor">
+            <label class="codnom1">Costo: <input type="number" class="campof" name="costop" id="costop"
+            min="0" step="0.01" required> </label>
+            <label class="codnom1">Porcentaje de Venta: <input type="number" class="campof" name="porcentajev"
+            id="porcentajev" min="0" step="0.01" required> </label>
+        </div>
+        
+        <div id="prefecha">
+        <label class="codnom1">Precio de venta: <input type="number" class="campof" name="pventa" id="pventa" step="0.01" readonly> </label>
+        <label class="codnom1">Fecha: <input type="date" class="campof" name="fecha_creacion" id="fecha_creacion" required> </label>
+        </div>
+
+        <div id="csimagen" >
+            <img width="200" alt="Vista previa de la imagen del producto">
+        </div>
+
+        <div id="botonimg">
+        <input type="file" class="campof" name="simagen" id="simagen" accept="image/jpeg,image/png,image/gif">
+        </div>
+        <input type="submit" name="cguardar" id="cguardar" value="Guardar">
     </form>
-</section>
+    </section>
     <footer class="fcolor-d5">
-        <p>Derechos Reservados &copy; 2004-2023 </p>
+        <p>Derechos Recervados &copy; 2004-2023 </p>
     </footer>
 </body>
 </html>

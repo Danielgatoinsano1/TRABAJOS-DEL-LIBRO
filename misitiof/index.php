@@ -13,8 +13,18 @@ $listaProductos = datosProductos::consultarProductoTod();
         <?php
         foreach ($listaProductos as $producto1) { ?>
             <div class="w3-col s3 w3-row-padding">
-                <img src="<?php echo 'imgfares/' . $producto1->imagen; ?>"
-                style="width:100%" onclick="onClick(this)">
+                <?php
+                $imagenProducto = basename((string) ($producto1->imagen ?? ''));
+                $rutaImagenProducto = __DIR__ . '/imgfares/' . $imagenProducto;
+                if ($imagenProducto !== '' && is_file($rutaImagenProducto)) { ?>
+                    <img src="<?php echo 'imgfares/' . rawurlencode($imagenProducto); ?>"
+                    alt="<?php echo htmlspecialchars((string) $producto1->nom_producto, ENT_QUOTES, 'UTF-8'); ?>"
+                    style="width:100%" onclick="onClick(this)">
+                <?php } else { ?>
+                    <div class="w3-panel w3-light-grey w3-center" style="min-height: 180px; display: flex; align-items: center; justify-content: center">
+                        Imagen no disponible
+                    </div>
+                <?php } ?>
             </div>
         <?php } ?>
     </div>

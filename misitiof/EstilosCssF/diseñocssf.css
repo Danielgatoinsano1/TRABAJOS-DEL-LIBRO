@@ -1,89 +1,104 @@
 html{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
 body{
     margin: 0px;
 }
+
 #titulo1{
-    text-align: center; /*Centrar el texto*/
     padding: 1px;
-    background-color: rgb(42, 112, 112);
+    background-color: rgb(42,112,112);
 }
-ul{
-    list-style-type:none; /*Eliminar viñetas*/
-    margin: 0; /*Eliminar margen*/
-    padding: 0; /*Eliminar padding*/
-    overflow: hidden; /*Cortar el contenido si no  cabe*/
-    display: flex; /*Contenedor flexible*/
-    
-}
-li a, .btndesplegable {
-    display: inline-block; /*Desplegar elemento en forma de bloque*/
-    color: rgb(0, 1, 2); /*Aplicar color a la fuente*/
+#titulo1 h1{
     text-align: center; /*Centrar el texto*/
-    padding: 10px 16px; /*Aplicar padding*/
-    text-decoration: none; /*Desactivar la decoracion*/
+}
+
+ul{
+    list-style-type: none;/*ELIMINAR VIÑETAS*/
+    margin: 0;/*ELIMINAR MARGEN*/
+    padding: 0;/*ELIMINAR PADDING*/
+    overflow: hidden;/*CORTAR EL CONTENIDO SI NO CABE*/
+    display: flex;/*CONTENEDOR FLEXIBLE*/
+}
+
+li a, .btndesplegable {
+display: inline-block;/*DESPLEGAR ELEMENTO EN FORMA DE BLOQUE*/
+color: rgb(0,1,2);/*APLICAR COLOR A LA FUENTE*/
+text-align: center;/*CENTRAR EL TEXTO*/
+padding: 10px 16px;/*APLICAR PADDING*/
+text-decoration: none;/*DESACTIVAR LA DECORACION*/
 }
 li a:hover, .f-desplegable:hover .btndesplegable {
-    background-color: rgb(19, 127, 141);
-    color: white;
+    background-color: rgb(19,127,141);
+    color: white;/*AL UBICAR EL PUNTERO SE APLICA EL COLOR DE FONDO Y TEXTO*/
 }
-.cont-desplegable {
-    display:none; /*Ocultar contenedor*/
-    position: absolute; /*Aplicar posicion absoluta*/
-    background-color: #f5f7f8; /*Aplicar color de fondo*/
-    min-width: 200px; /*Aplicar ancho minimo de 200 px*/
 
-    /*Aplicar sombra*/
-    box-shadow: 0px 8px 16px 0px rgba(36, 225, 231, 0.856);
-    z-index: 1; /*Ubicarlo sobre los otros contenedores*/
+.cont-desplegable {
+    display: none;/*OCULTAR CONTENEDOR*/
+    position: absolute;/*APLICAR POSICION ABSOLUTA*/
+    background-color: #f5f7f8;/*APLICAR COLOR DE FONDO*/
+    min-width: 200px;/*APLICAR ANCHO MINIMO DE 200PX*/
+
+    /*APLICAR SOMBRA*/
+    box-shadow: 0px 8px 16px 0px rgba(36,225,231,0.856);
+    z-index: 1;/*UBICARLO SOBRE LOS OTROS CONTENEDORES*/
 }
-.f-desplegable:hover .cont-desplegable {
-    display: block; /*Mostrar el contenedor*/
+
+.f-desplegable:hover .cont-desplegable{
+    display: block;/*MOSTRAR EL CONTENEDOR*/
 }
-.cont-desplegable a{
-    color:black; /*Aplicar color negro al texto*/
-    padding: 12px 16px; /*Agregar relleno*/
-    text-decoration: none; /*Eliminar las caracteristicas del texto*/
-    display: block; /*Convertir formato bloque el elemento*/
-    text-align: left; /*Alinear el texto a la izquierda*/
+
+.cont-desplegable a {
+    color: black;/*APLICAR COLOR NEGRO AL TEXTO*/
+    padding: 12px 16px;/*AGREGAR RELLENO*/
+    text-decoration: none;/*ELIMINAR LAS CARACTERISTICAS DEL TEXTO*/
+    display: block;/*CONVERTIR FORMATO BLOQUE EL ELEMENTO*/
+    text-align: left;/*ALINEAR EL TEXTO A LA IZQUIERDA*/
 }
+
 .cont-desplegable a:hover {
-    background-color:#d8d6d6; /*Color del fondo*/
-    color: rgb(3, 47, 68); /*Color del texto*/
+    background-color: #d8d6d6;/*COLOR DEL FONDO*/
+    color: rgb(3,47,68);/*COLOR DEL TEXTO*/
 }
+
 .seccion-form{
     width: 100%; /*Ancho del elemento*/
     display: flex; /*Hacer elemento flexible*/
-    flex-flow: row wrap;
-    justify-content: center; /*Centrar contenido*/
+    flex-direction: column; /*Poner elementos uno debajo del otro*/
+    align-items: center; /*Centrar contenido*/
     padding: 0px 0px 10px 0px;
 }
+
 .s-encabezado{
     width: 700px;
     background-image: linear-gradient(#3b1804, #0c504a);
     text-align: center;
-    padding: 0 20px;
+    padding: 0  30px;
 }
+
 form{
-    width: 700px; /*Ancho del formulario*/
-    padding: 20px; /*Relleno del formulario*/
+    width: 700px; /*Ancho del Formulario*/
+    padding: 20px; /*Relleno del Formulario*/
     line-height: 30px; /*Interlineado*/
 }
+
 #codnom, #cospor, #prefecha{
     display: flex;
     flex-wrap: wrap;
 }
 .codnom1{
-    flex: auto;
+    flex:auto;
 }
-.campof {
+
+.campof{
     padding: 6px 20px;
     margin: 8px 0;
     border: 1px solid #ccc;
     box-sizing:border-box;
 }
-input[type=submit] {
+
+input[type=submit]{
     background-color: #05588f;
     color: white;
     padding: 14px 20px;
@@ -91,11 +106,16 @@ input[type=submit] {
     border: none;
     border-radius: 8px;
 }
+
 input[type=submit]:hover {
     background-color: #087179;
 }
+
 footer{
     margin: auto;
     height: 50px;
     padding: 5px;
 }
+
+
+
