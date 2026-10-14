@@ -71,26 +71,32 @@ CREATE TABLE IF NOT EXISTS `detalle_factura` (
 
 -- Tablas requeridas por el flujo de facturación del libro.
 CREATE TABLE IF NOT EXISTS `controlfactura` (
+  `idcontrolfactura` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `nofactura` INT UNSIGNED NOT NULL,
   `codclientefact` INT NOT NULL,
   `subtotalfact` DECIMAL(12,2) NOT NULL DEFAULT 0,
   `impuestofact` DECIMAL(12,2) NOT NULL DEFAULT 0,
   `grantotalfact` DECIMAL(12,2) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`nofactura`),
+  `creada` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`idcontrolfactura`),
+  UNIQUE KEY `uq_controlfactura_numero` (`nofactura`),
   KEY `idx_controlfactura_cliente` (`codclientefact`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `movimientofactura` (
-  `idmovfactura` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `idmovimientofact` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `facturano` INT UNSIGNED NOT NULL,
   `clienteid` INT NOT NULL,
   `productoid` INT UNSIGNED NOT NULL,
   `cantfact` INT UNSIGNED NOT NULL,
   `precifact` DECIMAL(12,2) NOT NULL,
   `totalfact` DECIMAL(12,2) NOT NULL,
-  PRIMARY KEY (`idmovfactura`),
-  KEY `idx_movimientofactura_factura` (`facturano`),
-  KEY `idx_movimientofactura_producto` (`productoid`)
+  PRIMARY KEY (`idmovimientofact`),
+  KEY `idx_movfact_factura` (`facturano`),
+  KEY `idx_movfact_producto` (`productoid`),
+  CONSTRAINT `fk_movfact_control`
+    FOREIGN KEY (`facturano`) REFERENCES `controlfactura` (`nofactura`)
+    ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Datos mínimos de demostración solo cuando las tablas están vacías.

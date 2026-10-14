@@ -1,23 +1,28 @@
 <?php
 require_once 'conexionf2.php';
-//Almacenar en $cod_cli el valor de la variable buscarcliente recibida por el metodo POST
-$cod_cli = filter_input(INPUT_POST, 'buscarcliente', FILTER_VALIDATE_INT);
-header('Content-Type: application/json; charset=UTF-8');
-if (!$cod_cli) { echo json_encode([]); exit; }
-//Realizar la consulta
-$conexion = new Conexion();
-$consulta = $conexion->prepare('SELECT * FROM clientes where idcli = :codcli');
-$consulta->bindParam(':codcli', $cod_cli);
-$consulta->execute();
-$registros = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
-$json = array();
-if ($registros) {
-    foreach ($registros as $cliente) {
-        //Almacenar en la variable $vnom_pro l nombre del producto
-        $json[] = array(
-            'nombrecliente' => $cliente['nomcli'],
-        );
+header('Content-Type: application/json; charset=utf-8');
+
+try {
+    $codigo = filter_input(INPUT_POST, 'buscarcliente', FILTER_VALIDATE_INT);
+    if (!$codigo || $codigo < 1) {
+        echo json_encode([]);
+        exit;
     }
+
+    $conexion = new Conexion();
+    $consulta = $conexion->prepare(
+        'SELECT idcli, nomcli FROM clientes WHERE idcli = :codigo'
+    );
+    $consulta->execute([':codigo' => $codigo]);
+    $cliente = $consulta->fetch();
+
+    echo json_encode(
+        $cliente ? [['nombrecliente' => $cliente['nomcli']]] : [],
+        JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+    );
+} catch (Throwable $error) {
+    error_log('Error al buscar cliente para factura: ' . $error->getMessage());
+    http_response_code(500);
+    echo json_encode(['error' => true]);
 }
-echo json_encode($json, JSON_UNESCAPED_UNICODE);
