@@ -20,9 +20,8 @@ class Conexion extends PDO
             $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         } catch (PDOException $e) {
-            echo "Error al conectar con la base de datos. Detalle: " .
-                $e->getMessage();
-            exit;
+            error_log('Error de conexión a sistem_fares: ' . $e->getMessage());
+            throw new RuntimeException('No se pudo conectar con la base de datos.', 0, $e);
         }
     }
 }

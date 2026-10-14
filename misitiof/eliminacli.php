@@ -1,11 +1,22 @@
 <?php
 require_once 'manipularcli.php';
-$id = ""; //Declaracion de variable
-if (isset($_GET['id'])) { // Verificar si existe idcli y si tiene un valor
-$id = $_GET['id']; //Asignar el id del cliente a la variable $id
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: frmcliente.php');
+    exit;
 }
-//Instanciar la clase cliente y pasar por parametros el id del cliente
-$Clientes = new modificarcliente($id, null, null, null, null, null);
-$Clientes->eliminarcliente();
-header('Location: frmcliente.php'); //Llamar a la pagina frmcliente.php
-die();
+
+$id = filter_var($_POST['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+if ($id === false) {
+    header('Location: frmcliente.php?estado=error');
+    exit;
+}
+
+try {
+    (new modificarcliente($id, null, null, null, null, null))->eliminarCliente();
+    header('Location: frmcliente.php?estado=eliminado');
+} catch (Throwable $error) {
+    error_log('Error al eliminar cliente: ' . $error->getMessage());
+    header('Location: frmcliente.php?estado=error');
+}
+exit;

@@ -41,7 +41,10 @@ $productos = modificarProducto::limitarRegistros(($pagina - 1) * $cantidad, $can
                         <td><?php echo htmlspecialchars((string) $producto->stock); ?></td>
                         <td>
                             <a href="editproducto.php?codigo=<?php echo urlencode($producto->Codigo); ?>" class="w3-btn w3-teal" title="Editar"><i class="fas fa-edit"></i></a>
-                            <a href="eliminarproducto.php?codigo=<?php echo urlencode($producto->Codigo); ?>" class="w3-btn w3-red" title="Eliminar" onclick="return confirm('¿Deseas eliminar este producto?');"><i class="fas fa-trash"></i></a>
+                            <form action="eliminarproducto.php" method="post" style="display:inline">
+                                <input type="hidden" name="codigo" value="<?php echo htmlspecialchars((string) $producto->Codigo, ENT_QUOTES, 'UTF-8'); ?>">
+                                <button class="w3-btn w3-red" type="submit" title="Eliminar"><i class="fas fa-trash" aria-hidden="true"></i><span class="w3-hide">Eliminar</span></button>
+                            </form>
                         </td>
                     </tr>
                 <?php } ?>

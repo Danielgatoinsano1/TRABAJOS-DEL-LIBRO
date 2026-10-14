@@ -3,16 +3,17 @@
 require_once 'manipularcli.php';
 
 // Declaración de variables
-$id = "";
-$codid;
-$nombreCli;
-$direccioncli;
-$telefonosres;
-$telefonocel;
-$correocli;
+$id = filter_input(INPUT_GET, 'idcli', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+$codid = null;
+$nombreCli = '';
+$direccioncli = '';
+$telefonosres = '';
+$telefonocel = '';
+$correocli = '';
 
-if (isset($_GET['idcli'])) { // Verificar si existe idcli y si tiene un valor
-    $id = $_GET['idcli']; // Asignar el id del cliente a la variable $id
+if ($id === false || $id === null) {
+    header('Location: frmcliente.php?estado=no_encontrado');
+    exit;
 }
 
 // Instanciar la clase clientes y pasar por parámetros el id del cliente
@@ -38,5 +39,10 @@ foreach ($listaclientes as $clienteselec) {
     $telefonosres = $clienteselec->telres_cli;
     $telefonocel = $clienteselec->telcel_cli;
     $correocli = $clienteselec->email_cli;
+}
+
+if ($codid === null) {
+    header('Location: frmcliente.php?estado=no_encontrado');
+    exit;
 }
 ?>

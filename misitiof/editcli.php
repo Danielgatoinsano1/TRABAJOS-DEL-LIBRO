@@ -1,5 +1,8 @@
 <?php require 'menu.php'; ?> <!-- Agregar el menú -->
-<?php require_once 'ConsultarCliente.php'; ?>
+<?php
+require_once 'ConsultarCliente.php';
+$e = static fn($valor): string => htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
+?>
 
 <main class="w3-row-padding w3-container">
 
@@ -27,7 +30,7 @@
                         placeholder="Id del cliente"
                         id="ccod"
                         name="ccodigo"
-                        value="<?php echo $codid; ?>"
+                        value="<?php echo $e($codid ?? ''); ?>"
                         required
                         readonly
                     >
@@ -44,7 +47,7 @@
                         id="nalum"
                         name="cnomcliente"
                         placeholder="Nombre del cliente"
-                        value="<?php echo $nombreCli; ?>"
+                        value="<?php echo $e($nombreCli ?? ''); ?>"
                         required
                         autofocus
                     >
@@ -62,7 +65,7 @@
                     id="cdirec"
                     name="cdireccion"
                     placeholder="Dirección"
-                ><?php echo $direccioncli; ?></textarea>
+                ><?php echo $e($direccioncli ?? ''); ?></textarea>
             </div>
 
             <div class="w3-half">
@@ -76,7 +79,7 @@
                     id="ctel"
                     name="ctelcasa"
                     placeholder="Teléfono residencial"
-                    value="<?php echo $telefonosres; ?>"
+                    value="<?php echo $e($telefonosres ?? ''); ?>"
                     required
                 >
             </div>
@@ -92,7 +95,7 @@
                     id="ccel"
                     name="ccelular"
                     placeholder="Teléfono celular"
-                    value="<?php echo $telefonocel; ?>"
+                    value="<?php echo $e($telefonocel ?? ''); ?>"
                 >
             </div>
 
@@ -107,7 +110,7 @@
                     id="cemail"
                     name="cemail"
                     placeholder="Correo electrónico"
-                    value="<?php echo $correocli; ?>"
+                    value="<?php echo $e($correocli ?? ''); ?>"
                 >
             </div>
             <button

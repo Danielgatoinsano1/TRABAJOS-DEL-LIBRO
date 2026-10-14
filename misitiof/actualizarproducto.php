@@ -42,7 +42,7 @@ try {
     $precio = round($costo + ($costo * $porcentaje / 100), 2);
     (new modificarProducto($codigo, $nombre, $costo, $porcentaje, $precio, $fecha, $imagen))->actualizar($cambiarImagen);
     header('Location: cproductos.php?estado=actualizado');
-} catch (PDOException $e) {
+} catch (Throwable $e) {
     error_log('Error al actualizar producto: ' . $e->getMessage());
     header('Location: cproductos.php?estado=error');
 }

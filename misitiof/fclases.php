@@ -30,16 +30,16 @@ class datospersona
         return$this->demail;
     }
     public function set_codigo($codigo){
-        $this->dcodigo= $dcodigo;
+        $this->dcodigo = $codigo;
     }
     public function set_nombre($dnombre){
         $this->dnombre= $dnombre;
     }
     public function set_direccion($ddireccion){
-        $this->ddireccion= $direccion;
+        $this->ddireccion = $ddireccion;
     } 
     public function set_dtelresi($dtelreci){
-        $this->dtelresi= $dtelresi;
+        $this->dtelresi = $dtelreci;
     } 
     public function set_telcel($dtelcel){
         $this->dtelcel= $dtelcel;

@@ -29,9 +29,9 @@ require_once 'paginacionf.php';
 
                     <tr class="w3-hover-green">
                         <td><?php echo $cliente->idcli; ?></td>
-                        <td><?php echo $cliente->nomcli; ?></td>
-                        <td><?php echo $cliente->direccli; ?></td>
-                        <td><?php echo $cliente->telres_cli; ?></td>
+                        <td><?php echo htmlspecialchars((string) $cliente->nomcli, ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo htmlspecialchars((string) $cliente->direccli, ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo htmlspecialchars((string) $cliente->telres_cli, ENT_QUOTES, 'UTF-8'); ?></td>
                     </tr>
 
                 <?php } ?>
@@ -55,7 +55,7 @@ require_once 'paginacionf.php';
 
         <?php } else { ?>
 
-            <a href="clientespaginados.php?pagina=<?php echo $pagina - 1; ?>"
+            <a href="Clientespaginados.php?pagina=<?php echo $pagina - 1; ?>"
             class="w3-bar-item w3-button w3-border w3-teal">
                 &laquo;
             </a>
@@ -68,14 +68,14 @@ require_once 'paginacionf.php';
             <?php if ($pagina == $i) { ?>
 
                 <a class="w3-bar-item w3-button w3-border w3-dark-grey"
-                href="clientespaginados.php?pagina=<?php echo $i; ?>">
+                href="Clientespaginados.php?pagina=<?php echo $i; ?>">
                     <?php echo $i; ?>
                 </a>
 
             <?php } else { ?>
 
                 <a class="w3-bar-item w3-button w3-border"
-                href="clientespaginados.php?pagina=<?php echo $i; ?>">
+                href="Clientespaginados.php?pagina=<?php echo $i; ?>">
                     <?php echo $i; ?>
                 </a>
 
@@ -93,7 +93,7 @@ require_once 'paginacionf.php';
 
         <?php } else { ?>
 
-            <a href="clientespaginados.php?pagina=<?php echo $pagina + 1; ?>"
+            <a href="Clientespaginados.php?pagina=<?php echo $pagina + 1; ?>"
             class="w3-bar-item w3-button w3-border w3-teal">
                 &raquo;
             </a>

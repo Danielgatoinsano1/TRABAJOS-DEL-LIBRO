@@ -9,6 +9,7 @@
                 <strong id="numfactura">0000</strong>
             </div>
         </div>
+        <p id="estadoFactura" class="w3-panel w3-pale-red" role="status" aria-live="polite" style="display:none"></p>
 
         <form action="guardarfactura.php" method="post" id="formFactura">
             <input type="hidden" id="numfacturar" name="numfacturar" value="">

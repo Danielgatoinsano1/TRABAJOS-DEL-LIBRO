@@ -6,7 +6,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     botonPdf.addEventListener('click', () => {
         if (typeof window.html2pdf !== 'function') {
-            window.alert('No se pudo cargar la biblioteca para crear el PDF.');
+            const estado = document.getElementById('estadoPdf');
+            if (estado) estado.textContent = 'No se pudo cargar la función para crear el PDF.';
             return;
         }
 

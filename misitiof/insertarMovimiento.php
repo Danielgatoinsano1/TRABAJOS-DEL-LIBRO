@@ -60,16 +60,6 @@ if (
         $vcantidad_movi = filtrofares($_POST["cantpro"]);
     }
 
-    //Extraer el stock actual
-    $stockAct = 0;
-
-    $productoSelect =
-        datosProductos::consultarProductoCod($cod_pro);
-
-    foreach ($productoSelect as $producto1) {
-        $stockAct = (int) $producto1->stock;
-    }
-
     $datosmov = new datos_Movimiento(
         null,
         $cod_pro,
@@ -78,6 +68,12 @@ if (
     );
 
     try {
+        // Confirmar que el producto existe antes de guardar el movimiento.
+        $productoSelect = datosProductos::consultarProductoCod($cod_pro);
+        if (!$productoSelect) {
+            throw new DomainException('El producto seleccionado no existe.');
+        }
+        $stockAct = (int) $productoSelect[0]->stock;
         $datosmov->guardarmov($stockAct);
     } catch (Throwable $error) {
         error_log('Error al registrar movimiento de inventario: ' . $error->getMessage());

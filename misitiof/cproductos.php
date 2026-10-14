@@ -25,12 +25,15 @@
     <br><br>
     <?php if (isset($_GET['estado']) && is_string($_GET['estado'])) { ?>
         <?php $estadoProducto = $_GET['estado']; ?>
-        <div class="w3-panel <?php echo $estadoProducto === 'guardado' ? 'w3-pale-green' : 'w3-pale-red'; ?>">
+        <div class="w3-panel <?php echo in_array($estadoProducto, ['guardado', 'actualizado', 'eliminado'], true) ? 'w3-pale-green' : 'w3-pale-red'; ?>">
             <?php
             $mensajes = [
                 'guardado' => 'El producto se guardó correctamente.',
+                'actualizado' => 'Los datos del producto se actualizaron correctamente.',
+                'eliminado' => 'El producto se eliminó correctamente.',
                 'codigo_existe' => 'Ese código de producto ya está registrado.',
                 'imagen_error' => 'No se pudo procesar la imagen. Usa JPG, PNG o GIF.',
+                'no_encontrado' => 'No se encontró el producto solicitado.',
                 'error' => 'No se pudo guardar el producto. Revisa los datos e inténtalo nuevamente.',
             ];
             echo htmlspecialchars($mensajes[$estadoProducto] ?? $mensajes['error'], ENT_QUOTES, 'UTF-8');

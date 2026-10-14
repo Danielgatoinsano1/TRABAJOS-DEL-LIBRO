@@ -1,28 +1,24 @@
 <?php
 function conect()
 {
-$conexion=null;
-$nom_servidor="localhost";
-$username="root";
-$password="";
+    $nom_servidor = "localhost";
+    $username = "root";
+    $password = "";
 
-
-
-try{
-
-
-$conexion=new PDO("mysql:host=$nom_servidor;dbname=sistem_fares;charset=UTF8",
-$username,$password,array(
-    PDO::ATTR_EMULATE_PREPARES=> false,
-    PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION,
-));
-return $conexion;
+    try {
+        return new PDO(
+            "mysql:host=$nom_servidor;dbname=sistem_fares;charset=utf8mb4",
+            $username,
+            $password,
+            [
+                PDO::ATTR_EMULATE_PREPARES => false,
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            ]
+        );
+    } catch (PDOException $error) {
+        error_log('Error de conexión a sistem_fares: ' . $error->getMessage());
+        throw new RuntimeException('No se pudo conectar con la base de datos.', 0, $error);
+    }
 }
-catch(PDOException $e){
-
-echo $e->getMessage();
-return null;
-}
- }
 
 ?>

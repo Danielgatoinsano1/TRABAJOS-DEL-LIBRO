@@ -40,8 +40,8 @@ try {
 
     header('Location: frmcliente.php');
     exit;
-} catch (PDOException $e) {
-    if ($e->getCode() === '23000') {
+} catch (Throwable $e) {
+    if ($e instanceof PDOException && $e->getCode() === '23000') {
         header('Location: frmcliente.php?estado=codigo_existe');
         exit;
     }

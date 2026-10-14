@@ -3,7 +3,13 @@
 
 <main class="w3-row-padding w3-container">
 
-    <?php if (isset($_GET['estado']) && $_GET['estado'] === 'codigo_existe') { ?>
+    <?php if (isset($_GET['estado']) && $_GET['estado'] === 'actualizado') { ?>
+        <div class="w3-panel w3-pale-green"><p>Los datos del cliente se actualizaron correctamente.</p></div>
+    <?php } elseif (isset($_GET['estado']) && $_GET['estado'] === 'eliminado') { ?>
+        <div class="w3-panel w3-pale-green"><p>El cliente se eliminó correctamente.</p></div>
+    <?php } elseif (isset($_GET['estado']) && $_GET['estado'] === 'no_encontrado') { ?>
+        <div class="w3-panel w3-pale-red"><p>No se encontró el cliente solicitado.</p></div>
+    <?php } elseif (isset($_GET['estado']) && $_GET['estado'] === 'codigo_existe') { ?>
         <div class="w3-panel w3-red">
             <p>Ese código ya existe. Escribe un código diferente.</p>
         </div>
@@ -130,15 +136,15 @@
 
                 <tr>
                     <!-- Mostrar el id del alumno que esta dentro de $cliente -->
-                    <td><?php echo $cliente->idcli; ?></td>
+                    <td><?php echo htmlspecialchars((string) $cliente->idcli, ENT_QUOTES, 'UTF-8'); ?></td>
 
                     <!-- Mostrar el nombre del alumno que esta dentro de $cliente -->
-                    <td><?php echo $cliente->nomcli; ?></td>
+                    <td><?php echo htmlspecialchars((string) $cliente->nomcli, ENT_QUOTES, 'UTF-8'); ?></td>
 
                     <td>
                         <!-- Pasar el id al archivo editcli.php cuando se dé clic
                         en el botón Editar -->
-                        <a href="editcli.php?idcli=<?php echo $cliente->idcli ?>"
+                        <a href="editcli.php?idcli=<?php echo rawurlencode((string) $cliente->idcli); ?>"
                         class="w3-btn w3-teal">
 
                             <!-- Insertar un icono de editar -->
@@ -147,12 +153,13 @@
 
                         <!-- Pasar el id al archivo eliminacli.php cuando se dé
                         clic en el botón Eliminar -->
-                        <a href="eliminacli.php?id=<?php echo $cliente->idcli ?>"
-                        class="w3-btn w3-red">
-
-                            <!-- Insertar un icono de eliminar -->
-                            <i class="fas fa-user-times"></i>
-                        </a>
+                        <form action="eliminacli.php" method="post" style="display:inline">
+                            <input type="hidden" name="id" value="<?php echo htmlspecialchars((string) $cliente->idcli, ENT_QUOTES, 'UTF-8'); ?>">
+                            <button type="submit" class="w3-btn w3-red" title="Eliminar cliente">
+                                <i class="fas fa-user-times" aria-hidden="true"></i>
+                                <span class="w3-hide">Eliminar cliente</span>
+                            </button>
+                        </form>
                     </td>
                 </tr>
 

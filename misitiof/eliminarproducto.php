@@ -2,16 +2,22 @@
 
 require_once 'manipularproductos.php';
 
-$codigo = filter_input(INPUT_GET, 'codigo', FILTER_VALIDATE_INT);
-if ($codigo) {
-    try {
-        (new modificarProducto($codigo))->eliminar();
-        header('Location: cproductos.php?estado=eliminado');
-        exit;
-    } catch (PDOException $e) {
-        error_log('Error al eliminar producto: ' . $e->getMessage());
-    }
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: Productospaginados.php');
+    exit;
 }
 
-header('Location: cproductos.php?estado=error');
+$codigo = filter_var($_POST['codigo'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+if ($codigo === false) {
+    header('Location: cproductos.php?estado=error');
+    exit;
+}
+
+try {
+    (new modificarProducto($codigo))->eliminar();
+    header('Location: cproductos.php?estado=eliminado');
+} catch (Throwable $error) {
+    error_log('Error al eliminar producto: ' . $error->getMessage());
+    header('Location: cproductos.php?estado=error');
+}
 exit;

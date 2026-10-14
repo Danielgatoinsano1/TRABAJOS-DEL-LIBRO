@@ -21,6 +21,7 @@ $salidaSegura = static fn($valor): string => htmlspecialchars((string) $valor, E
 </head>
 <body class="w3-container w3-padding">
     <button class="w3-button w3-teal no-imprimir" id="btnPdf" type="button">Clic para crear PDF</button>
+    <span id="estadoPdf" class="w3-small" role="status" aria-live="polite"></span>
     <main id="documentoFactura" class="w3-container w3-padding factura-papel">
         <header class="w3-row w3-padding w3-border-bottom">
             <div class="w3-third"><strong class="w3-xlarge">Ediciones Fares</strong></div>

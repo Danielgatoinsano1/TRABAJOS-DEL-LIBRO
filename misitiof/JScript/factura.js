@@ -9,6 +9,7 @@ $(function () {
         boton.prop('disabled', true);
         $.ajax({ url: 'obtenerfacturamax.php', dataType: 'json' })
             .done(function (facturas) {
+                mostrarEstadoFactura('');
                 const ultimo = Number(facturas?.[0]?.ultimafactura) || 999;
                 const numero = ultimo + 1;
                 $('#numfacturar').val(numero);
@@ -16,8 +17,9 @@ $(function () {
                 $('.tabla tr:not(.ajaxTitle)').remove();
                 $('#subtotalfact, #impuestofact, #todpagarfact').val('0.00');
                 $('#cod_cliente, #nombrecliente').val('');
+                $('#codpro, #cantpro, #despro, #prepro, #totpro').val('');
             })
-            .fail(function () { window.alert('No se pudo obtener el numero de factura.'); })
+            .fail(function () { mostrarEstadoFactura('No se pudo obtener el número de factura.'); })
             .always(function () { boton.prop('disabled', false); });
     });
 
@@ -76,10 +78,12 @@ $(function () {
         const tieneProductos = $('.tabla tr:not(.ajaxTitle)').length > 0;
         if (!$('#numfacturar').val() || !tieneProductos) {
             event.preventDefault();
-            window.alert('Genera el numero de factura y agrega al menos un producto.');
+            mostrarEstadoFactura('Genera el número de factura y agrega al menos un producto.');
         } else if (!$('#cod_cliente').val() || !$('#nombrecliente').val()) {
             event.preventDefault();
-            window.alert('Ingresa el codigo de un cliente existente.');
+            mostrarEstadoFactura('Ingresa el código de un cliente existente.');
+        } else {
+            mostrarEstadoFactura('');
         }
     });
 });
@@ -99,7 +103,7 @@ function agregarProducto() {
     const total = cantidad * precio;
     if (!/^\d+$/.test(codigo) || !Number.isInteger(cantidad) || cantidad < 1
         || !descripcion || !Number.isFinite(precio) || precio < 0 || !Number.isFinite(total)) {
-        window.alert('Selecciona un producto valido e indica una cantidad mayor que cero.');
+        mostrarEstadoFactura('Selecciona un producto e indica una cantidad mayor que cero.');
         return;
     }
 
@@ -120,8 +124,15 @@ function agregarProducto() {
     });
 
     $('.tabla').append(fila);
+    mostrarEstadoFactura('');
     calcularTotales(total, Number($('#subtotalfact').val()) || 0);
     $('#codpro, #cantpro, #despro, #prepro, #totpro').val('');
+}
+
+function mostrarEstadoFactura(mensaje) {
+    const estado = $('#estadoFactura');
+    estado.text(mensaje);
+    estado.toggle(mensaje !== '');
 }
 
 function calcularTotales(total, subtotalActual) {
