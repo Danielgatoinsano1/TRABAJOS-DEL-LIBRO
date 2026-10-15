@@ -1,5 +1,12 @@
 <?php require 'menu.php'; ?>
 
+<style>
+    #formFactura .datosproducto fieldset > .w3-col {
+        box-sizing: border-box;
+        padding: 0 4px;
+    }
+</style>
+
 <main class="w3-container w3-mobile">
     <div class="w3-content" style="max-width: 80%">
         <div class="w3-container w3-col w3-teal" style="display: flex; align-items: stretch; padding: 0">
@@ -13,6 +20,18 @@
 
         <form action="guardarfactura.php" method="post" id="formFactura">
             <input type="hidden" id="numfacturar" name="numfacturar" value="">
+            <section id="vistaPreviaFactura" class="w3-container w3-white w3-border w3-margin-top factura-borrador" aria-label="Vista previa de la factura">
+                <div class="w3-row w3-padding-16" style="display:none">
+                    <div class="w3-half">
+                        <strong class="w3-xlarge">Ediciones Fares</strong>
+                        <p class="w3-margin-bottom">Vista previa de la factura</p>
+                        <p class="w3-margin-top">Cliente: <strong id="vistaNombreCliente">Selecciona un cliente</strong></p>
+                    </div>
+                    <div class="w3-half w3-right-align">
+                        <span>Número de factura</span>
+                        <div id="vistaNumeroFactura" class="w3-xxxlarge w3-text-red">—</div>
+                    </div>
+                </div>
 
             <div class="w3-responsive">
                 <table class="w3-table-all w3-centered w3-bordered" id="tablaFactura">
@@ -25,7 +44,9 @@
                             <th style="width: 15%">Total</th>
                         </tr>
                     </thead>
-                    <tbody class="tabla"></tbody>
+                    <tbody class="tabla">
+                        <tr id="filaFacturaVacia"><td colspan="5" class="w3-text-grey">Inicia una factura y agrega productos para verlos aquí.</td></tr>
+                    </tbody>
                 </table>
             </div>
 
@@ -43,6 +64,7 @@
                     <input type="text" id="todpagarfact" name="todpagarfact" class="w3-input w3-border w3-sand" readonly>
                 </div>
             </div>
+            </section>
 
             <div class="w3-row">
                 <div class="datosproducto w3-col s12 m7">

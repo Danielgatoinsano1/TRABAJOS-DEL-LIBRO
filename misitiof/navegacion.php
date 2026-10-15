@@ -11,6 +11,18 @@
             <a href="frmMovimiento.php" class="w3-bar-item w3-button">Agregar inventario</a>
             <a href="frmFactura.php" class="w3-bar-item w3-button">Facturar</a>
             <a href="facturasguardadas.php" class="w3-bar-item w3-button">Facturas guardadas</a>
+            <a href="frmLibros.php" class="w3-bar-item w3-button">Información libros</a>
+        </div>
+    </div>
+    <div class="w3-dropdown-click w3-mobile">
+        <button class="w3-button" type="button" aria-controls="menuLibros"
+            aria-expanded="false"
+            onclick="const menu = this.nextElementSibling; const abrir = !menu.classList.contains('w3-show'); menu.classList.toggle('w3-show', abrir); this.setAttribute('aria-expanded', String(abrir))">Libros</button>
+        <div id="menuLibros" class="w3-dropdown-content w3-bar-block ftema">
+            <a href="libroscategoria.php?categoria=<?php echo rawurlencode('Educación Básica'); ?>" class="w3-bar-item w3-button">Educación Básica</a>
+            <a href="libroscategoria.php?categoria=<?php echo rawurlencode('I BTP y I BCH'); ?>" class="w3-bar-item w3-button">I BTP y I BCH</a>
+            <a href="libroscategoria.php?categoria=<?php echo rawurlencode('II BTP'); ?>" class="w3-bar-item w3-button">II BTP</a>
+            <a href="libroscategoria.php?categoria=<?php echo rawurlencode('III BTP'); ?>" class="w3-bar-item w3-button">III BTP</a>
         </div>
     </div>
     <a href="mailto:edicionesfares@edicionesfares.com" class="w3-bar-item w3-button w3-mobile">Contacto</a>

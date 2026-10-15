@@ -14,9 +14,13 @@ $(function () {
                 const numero = ultimo + 1;
                 $('#numfacturar').val(numero);
                 $('#numfactura').text(numero);
-                $('.tabla tr:not(.ajaxTitle)').remove();
+                $('#vistaNumeroFactura').text(numero);
+                $('#vistaPreviaFactura').show();
+                $('.tabla .factura-linea').remove();
+                $('#filaFacturaVacia').show();
                 $('#subtotalfact, #impuestofact, #todpagarfact').val('0.00');
                 $('#cod_cliente, #nombrecliente').val('');
+                $('#vistaNombreCliente').text('Selecciona un cliente');
                 $('#codpro, #cantpro, #despro, #prepro, #totpro').val('');
             })
             .fail(function () { mostrarEstadoFactura('No se pudo obtener el número de factura.'); })
@@ -28,6 +32,7 @@ $(function () {
     $('#cod_cliente').on('input', function () {
         const codigo = this.value.trim();
         $('#nombrecliente').val('');
+        $('#vistaNombreCliente').text('Selecciona un cliente');
         window.clearTimeout(timerCliente);
         if (peticionCliente) peticionCliente.abort();
         if (!/^\d+$/.test(codigo)) return;
@@ -40,10 +45,13 @@ $(function () {
                 data: { buscarcliente: codigo }
             }).done(function (clientes) {
                 if ($('#cod_cliente').val().trim() !== codigo) return;
-                $('#nombrecliente').val(clientes?.[0]?.nombrecliente || '');
+                const nombre = clientes?.[0]?.nombrecliente || '';
+                $('#nombrecliente').val(nombre);
+                $('#vistaNombreCliente').text(nombre || 'Selecciona un cliente');
             }).fail(function (xhr, estado) {
                 if (estado !== 'abort' && $('#cod_cliente').val().trim() === codigo) {
                     $('#nombrecliente').val('');
+                    $('#vistaNombreCliente').text('Selecciona un cliente');
                 }
             });
         }, 250);
@@ -75,7 +83,7 @@ $(function () {
     $('#cantpro, #prepro').on('input', calcularTotalProducto);
 
     $('#formFactura').on('submit', function (event) {
-        const tieneProductos = $('.tabla tr:not(.ajaxTitle)').length > 0;
+        const tieneProductos = $('.tabla .factura-linea').length > 0;
         if (!$('#numfacturar').val() || !tieneProductos) {
             event.preventDefault();
             mostrarEstadoFactura('Genera el número de factura y agrega al menos un producto.');
@@ -96,6 +104,11 @@ function calcularTotalProducto() {
 }
 
 function agregarProducto() {
+    if (!$('#numfacturar').val()) {
+        mostrarEstadoFactura('Primero inicia una factura.');
+        return;
+    }
+
     const codigo = $('#codpro').val().trim();
     const cantidad = Number($('#cantpro').val());
     const descripcion = $('#despro').val().trim();
@@ -107,7 +120,7 @@ function agregarProducto() {
         return;
     }
 
-    const fila = $('<tr class="w3-hover-green"></tr>');
+    const fila = $('<tr class="w3-hover-green factura-linea"></tr>');
     const campos = [
         ['Id_Producto[]', codigo, '10%'],
         ['Cantidad[]', cantidad, '10%'],
@@ -117,13 +130,15 @@ function agregarProducto() {
     ];
     campos.forEach(([nombre, valor, ancho]) => {
         const celda = $('<td></td>').css('width', ancho);
-        const entrada = $('<input type="text" class="w3-input w3-border w3-sand" readonly>')
+        const entrada = $('<input type="hidden">')
             .attr('name', nombre).val(valor);
-        celda.append(entrada);
+        celda.text(valor).append(entrada);
         fila.append(celda);
     });
 
+    $('#filaFacturaVacia').hide();
     $('.tabla').append(fila);
+    $('#vistaPreviaFactura').show();
     mostrarEstadoFactura('');
     calcularTotales(total, Number($('#subtotalfact').val()) || 0);
     $('#codpro, #cantpro, #despro, #prepro, #totpro').val('');
