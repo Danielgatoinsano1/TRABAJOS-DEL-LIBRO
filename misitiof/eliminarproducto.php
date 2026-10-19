@@ -15,7 +15,7 @@ if ($codigo === false) {
 
 try {
     (new modificarProducto($codigo))->eliminar();
-    header('Location: cproductos.php?estado=eliminado');
+    header('Location: cproductos.php');
 } catch (Throwable $error) {
     error_log('Error al eliminar producto: ' . $error->getMessage());
     header('Location: cproductos.php?estado=error');

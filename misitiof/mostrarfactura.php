@@ -2,6 +2,13 @@
 require_once 'cargarfactura.php';
 $factura = $registros[0];
 $salidaSegura = static fn($valor): string => htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
+$subtotalFactura = 0.0;
+foreach ($registros as $detalle) {
+    $subtotalFactura += (float) $detalle['precifact'] * (int) $detalle['cantfact'];
+}
+$subtotalFactura = round($subtotalFactura, 2);
+$ivaFactura = round($subtotalFactura * 0.15, 2);
+$totalFactura = round($subtotalFactura + $ivaFactura, 2);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -24,7 +31,10 @@ $salidaSegura = static fn($valor): string => htmlspecialchars((string) $valor, E
     <span id="estadoPdf" class="w3-small" role="status" aria-live="polite"></span>
     <main id="documentoFactura" class="w3-container w3-padding factura-papel">
         <header class="w3-row w3-padding w3-border-bottom">
-            <div class="w3-third"><strong class="w3-xlarge">Ediciones Fares</strong></div>
+            <div class="w3-third" style="display:flex;align-items:center;gap:8px">
+                <img src="imgfares/FAVICON.jpg" alt="Logotipo de Ediciones Fares" style="width:52px;height:52px;object-fit:contain">
+                <strong class="w3-xlarge">Ediciones Fares</strong>
+            </div>
             <div class="w3-third"><strong>Ediciones Fares</strong><br>Tegucigalpa, Honduras C.A.</div>
             <div class="w3-third">www.edicionesfares.com<br>Email: edicionesfares@edicionesfares.com</div>
         </header>
@@ -35,7 +45,10 @@ $salidaSegura = static fn($valor): string => htmlspecialchars((string) $valor, E
                 <p>Dirección: <?php echo nl2br($salidaSegura($factura['direccli'])); ?></p>
                 <p>Teléfono: <?php echo $salidaSegura($factura['telres_cli']); ?></p>
             </div>
-            <div class="w3-third"><p class="w3-xlarge">Factura No:</p><strong class="w3-xxxlarge w3-text-red"><?php echo $salidaSegura($factura['facturano']); ?></strong></div>
+            <div class="w3-third w3-right-align">
+                <p class="w3-xlarge">Factura No.</p>
+                <strong class="w3-xxxlarge w3-text-red"><?php echo $salidaSegura($factura['facturano']); ?></strong>
+            </div>
         </section>
         <table class="w3-table w3-bordered w3-margin-top">
             <thead><tr><th>Cantidad</th><th>Descripción</th><th>Precio</th><th>Total</th></tr></thead>
@@ -45,15 +58,19 @@ $salidaSegura = static fn($valor): string => htmlspecialchars((string) $valor, E
                     <td><?php echo $salidaSegura($detalle['cantfact']); ?></td>
                     <td><?php echo $salidaSegura($detalle['nom_producto']); ?></td>
                     <td><?php echo number_format((float) $detalle['precifact'], 2); ?></td>
-                    <td><?php echo number_format((float) $detalle['totalfact'], 2); ?></td>
+                    <td><?php echo number_format((float) $detalle['precifact'] * (int) $detalle['cantfact'], 2); ?></td>
                 </tr>
             <?php } ?>
             </tbody>
         </table>
         <section class="w3-row w3-padding w3-border-top">
-            <div class="w3-third w3-right"><p>Total a pagar: <strong><?php echo number_format((float) $factura['grantotalfact'], 2); ?></strong></p>
-                <p>IVA: <?php echo number_format((float) $factura['impuestofact'], 2); ?></p>
-                <p>Subtotal: <?php echo number_format((float) $factura['subtotalfact'], 2); ?></p>
+            <div class="w3-third w3-right">
+                <label for="totalFactura">Total a pagar:</label>
+                <input id="totalFactura" class="w3-input w3-border w3-sand" readonly value="<?php echo number_format($totalFactura, 2); ?>">
+                <label for="ivaFactura">IVA:</label>
+                <input id="ivaFactura" class="w3-input w3-border w3-sand" readonly value="<?php echo number_format($ivaFactura, 2); ?>">
+                <label for="subtotalFactura">Subtotal:</label>
+                <input id="subtotalFactura" class="w3-input w3-border w3-sand" readonly value="<?php echo number_format($subtotalFactura, 2); ?>">
             </div>
         </section>
     </main>

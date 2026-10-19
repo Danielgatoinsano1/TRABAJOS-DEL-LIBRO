@@ -1,24 +1,12 @@
 <?php
-function conect()
-{
-    $nom_servidor = "localhost";
-    $username = "root";
-    $password = "";
+require_once __DIR__ . '/configuracion_bd.php';
 
+function conect($base = 'sistem_fares')
+{
     try {
-        return new PDO(
-            "mysql:host=$nom_servidor;dbname=sistem_fares;charset=utf8mb4",
-            $username,
-            $password,
-            [
-                PDO::ATTR_EMULATE_PREPARES => false,
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            ]
-        );
+        return crearConexionBaseDatos($base);
     } catch (PDOException $error) {
-        error_log('Error de conexión a sistem_fares: ' . $error->getMessage());
-        throw new RuntimeException('No se pudo conectar con la base de datos.', 0, $error);
+        error_log('Error de conexión a ' . $base . ': ' . $error->getMessage());
+        throw new RuntimeException('No se pudo conectar con la base de datos solicitada.', 0, $error);
     }
 }
-
-?>

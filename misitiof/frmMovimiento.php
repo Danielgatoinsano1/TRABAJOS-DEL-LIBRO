@@ -1,4 +1,4 @@
-<!-- Agregar el menú -->
+﻿<!-- Agregar el menú -->
 <?php require 'menu.php'; ?>
 
 <main class="w3-content" style="max-width:400px">
@@ -11,11 +11,9 @@
             <h2>Cargar inventario</h2>
         </div>
 
-        <?php if (isset($_GET['estado']) && is_string($_GET['estado'])) { ?>
-            <div class="w3-panel <?php echo $_GET['estado'] === 'guardado' ? 'w3-pale-green' : 'w3-pale-red'; ?>">
-                <?php echo $_GET['estado'] === 'guardado' ? 'El inventario se actualizó correctamente.' : 'No se pudo actualizar el inventario. Verifica el producto, la fecha y la cantidad.'; ?>
-            </div>
-        <?php } ?>
+<?php if (isset($_GET['estado']) && $_GET['estado'] === 'error') { ?>
+<div class="w3-panel w3-pale-red">No se pudo actualizar el inventario. Verifica el producto, la fecha y la cantidad.</div>
+<?php } ?>
 
         <!-- Diseño del formulario -->
         <form class="w3-card" action="insertarMovimiento.php" method="post">

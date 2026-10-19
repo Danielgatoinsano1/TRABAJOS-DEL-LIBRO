@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -23,13 +23,12 @@
             <h2>Inventario</h2>
         </div>
     <br><br>
-    <?php if (isset($_GET['estado']) && is_string($_GET['estado'])) { ?>
+    <?php if (isset($_GET['estado']) && is_string($_GET['estado']) && $_GET['estado'] !== 'guardado') { ?>
         <?php $estadoProducto = $_GET['estado']; ?>
-        <div class="w3-panel <?php echo in_array($estadoProducto, ['guardado', 'actualizado', 'eliminado'], true) ? 'w3-pale-green' : 'w3-pale-red'; ?>">
+        <div class="w3-panel <?php echo in_array($estadoProducto, ['guardado', 'actualizado', 'eliminado'], true) ? 'w3-pale-green' : 'w3-pale-red'; ?>" role="status">
             <?php
             $mensajes = [
-                'guardado' => 'El producto se guardó correctamente.',
-                'actualizado' => 'Los datos del producto se actualizaron correctamente.',
+                'actualizado' => 'El producto se actualizó correctamente.',
                 'eliminado' => 'El producto se eliminó correctamente.',
                 'codigo_existe' => 'Ese código de producto ya está registrado.',
                 'imagen_error' => 'No se pudo procesar la imagen. Usa JPG, PNG o GIF.',
@@ -62,7 +61,7 @@
         <label class="codnom1">Fecha: <input type="date" class="campof" name="fecha_creacion" id="fecha_creacion" required> </label>
         </div>
 
-        <div id="csimagen" >
+        <div id="csimagen">
             <img width="200" alt="Vista previa de la imagen del producto">
         </div>
 

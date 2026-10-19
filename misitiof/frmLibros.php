@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'menu.php';
 require_once 'classProducto.php';
 
@@ -26,9 +26,7 @@ $estado = $_GET['estado'] ?? '';
             <h2>Información y comentarios de libros</h2>
         </div>
 
-        <?php if ($estado === 'guardado') { ?>
-            <div class="w3-panel w3-pale-green" role="status">La información del libro se guardó correctamente.</div>
-        <?php } elseif ($estado === 'error') { ?>
+        <?php if ($estado === 'error') { ?>
             <div class="w3-panel w3-pale-red" role="alert">No se pudo guardar. Revisa los datos y vuelve a intentarlo.</div>
         <?php } ?>
 
@@ -61,7 +59,7 @@ $estado = $_GET['estado'] ?? '';
                 <label for="comentario">Comentario</label>
                 <textarea class="w3-input w3-border" name="comentario" id="comentario" rows="3" maxlength="3000"></textarea>
             </p>
-            <button class="w3-button w3-teal" type="submit">Guardar información</button>
+            <button class="w3-button w3-teal" type="submit">Guardar información y comentario</button>
             <a class="w3-button w3-light-grey" href="index.php">Volver a la galería</a>
         </form>
     </div>

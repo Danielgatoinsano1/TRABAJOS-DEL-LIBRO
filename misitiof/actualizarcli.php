@@ -68,7 +68,7 @@ if (
 
     try {
         $guardarcliente->actualizar();
-        header('Location: frmcliente.php?estado=actualizado');
+        header('Location: frmcliente.php');
     } catch (Throwable $error) {
         error_log('Error al actualizar cliente: ' . $error->getMessage());
         header('Location: frmcliente.php?estado=error');

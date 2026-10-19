@@ -1,13 +1,9 @@
-<!-- Agregar el menú -->
+﻿<!-- Agregar el menú -->
 <?php require 'menu.php'; ?>
 
 <main class="w3-row-padding w3-container">
 
-    <?php if (isset($_GET['estado']) && $_GET['estado'] === 'actualizado') { ?>
-        <div class="w3-panel w3-pale-green"><p>Los datos del cliente se actualizaron correctamente.</p></div>
-    <?php } elseif (isset($_GET['estado']) && $_GET['estado'] === 'eliminado') { ?>
-        <div class="w3-panel w3-pale-green"><p>El cliente se eliminó correctamente.</p></div>
-    <?php } elseif (isset($_GET['estado']) && $_GET['estado'] === 'no_encontrado') { ?>
+    <?php if (isset($_GET['estado']) && $_GET['estado'] === 'no_encontrado') { ?>
         <div class="w3-panel w3-pale-red"><p>No se encontró el cliente solicitado.</p></div>
     <?php } elseif (isset($_GET['estado']) && $_GET['estado'] === 'codigo_existe') { ?>
         <div class="w3-panel w3-red">

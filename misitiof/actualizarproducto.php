@@ -41,7 +41,7 @@ if ($cambiarImagen) {
 try {
     $precio = round($costo + ($costo * $porcentaje / 100), 2);
     (new modificarProducto($codigo, $nombre, $costo, $porcentaje, $precio, $fecha, $imagen))->actualizar($cambiarImagen);
-    header('Location: cproductos.php?estado=actualizado');
+    header('Location: cproductos.php');
 } catch (Throwable $e) {
     error_log('Error al actualizar producto: ' . $e->getMessage());
     header('Location: cproductos.php?estado=error');

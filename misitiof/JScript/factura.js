@@ -5,23 +5,22 @@ $(function () {
     let peticionProducto = null;
 
     $('#btnNueva').on('click', function () {
+        const tieneProductos = $('.tabla .factura-linea').length > 0;
+        const tieneCliente = $('#cod_cliente').val().trim() !== '';
+        const tieneProductoEnCaptura = $('#codpro').val().trim() !== '';
+        const tieneBorrador = tieneProductos || tieneCliente || tieneProductoEnCaptura;
+
         const boton = $(this);
         boton.prop('disabled', true);
         $.ajax({ url: 'obtenerfacturamax.php', dataType: 'json' })
             .done(function (facturas) {
                 mostrarEstadoFactura('');
                 const ultimo = Number(facturas?.[0]?.ultimafactura) || 999;
-                const numero = ultimo + 1;
+                const numeroActual = Number($('#numfacturar').val()) || 999;
+                const numero = Math.max(ultimo + 1, numeroActual + (tieneBorrador ? 1 : 0));
                 $('#numfacturar').val(numero);
                 $('#numfactura').text(numero);
-                $('#vistaNumeroFactura').text(numero);
                 $('#vistaPreviaFactura').show();
-                $('.tabla .factura-linea').remove();
-                $('#filaFacturaVacia').show();
-                $('#subtotalfact, #impuestofact, #todpagarfact').val('0.00');
-                $('#cod_cliente, #nombrecliente').val('');
-                $('#vistaNombreCliente').text('Selecciona un cliente');
-                $('#codpro, #cantpro, #despro, #prepro, #totpro').val('');
             })
             .fail(function () { mostrarEstadoFactura('No se pudo obtener el número de factura.'); })
             .always(function () { boton.prop('disabled', false); });
@@ -32,7 +31,6 @@ $(function () {
     $('#cod_cliente').on('input', function () {
         const codigo = this.value.trim();
         $('#nombrecliente').val('');
-        $('#vistaNombreCliente').text('Selecciona un cliente');
         window.clearTimeout(timerCliente);
         if (peticionCliente) peticionCliente.abort();
         if (!/^\d+$/.test(codigo)) return;
@@ -47,11 +45,9 @@ $(function () {
                 if ($('#cod_cliente').val().trim() !== codigo) return;
                 const nombre = clientes?.[0]?.nombrecliente || '';
                 $('#nombrecliente').val(nombre);
-                $('#vistaNombreCliente').text(nombre || 'Selecciona un cliente');
             }).fail(function (xhr, estado) {
                 if (estado !== 'abort' && $('#cod_cliente').val().trim() === codigo) {
                     $('#nombrecliente').val('');
-                    $('#vistaNombreCliente').text('Selecciona un cliente');
                 }
             });
         }, 250);
@@ -60,6 +56,7 @@ $(function () {
     $('#codpro').on('input', function () {
         const codigo = this.value.trim();
         $('#prepro, #despro, #totpro').val('');
+        actualizarTotalesFactura();
         window.clearTimeout(timerProducto);
         if (peticionProducto) peticionProducto.abort();
         if (!/^\d+$/.test(codigo)) return;
@@ -76,6 +73,7 @@ $(function () {
                 if (!producto) return;
                 $('#prepro').val(producto.preproducto).trigger('input');
                 $('#despro').val(producto.nomproducto);
+                calcularTotalProducto();
             });
         }, 250);
     });
@@ -84,9 +82,13 @@ $(function () {
 
     $('#formFactura').on('submit', function (event) {
         const tieneProductos = $('.tabla .factura-linea').length > 0;
+        const productoPendiente = $('#codpro').val().trim() !== '';
         if (!$('#numfacturar').val() || !tieneProductos) {
             event.preventDefault();
             mostrarEstadoFactura('Genera el número de factura y agrega al menos un producto.');
+        } else if (productoPendiente) {
+            event.preventDefault();
+            mostrarEstadoFactura('Agrega a la factura el producto que estás capturando antes de guardar.');
         } else if (!$('#cod_cliente').val() || !$('#nombrecliente').val()) {
             event.preventDefault();
             mostrarEstadoFactura('Ingresa el código de un cliente existente.');
@@ -98,9 +100,10 @@ $(function () {
 
 function calcularTotalProducto() {
     const cantidad = Number($('#cantpro').val());
-    const precio = Number($('#prepro').val());
+    const precioTexto = $('#prepro').val();
+    const precio = Number(precioTexto);
     const total = cantidad * precio;
-    $('#totpro').val(Number.isFinite(total) && cantidad > 0 ? total.toFixed(2) : '');
+    $('#totpro').val(precioTexto !== '' && Number.isFinite(total) && cantidad > 0 ? total.toFixed(2) : '');
 }
 
 function agregarProducto() {
@@ -121,18 +124,19 @@ function agregarProducto() {
     }
 
     const fila = $('<tr class="w3-hover-green factura-linea"></tr>');
+    const celdaId = $('<td></td>').text(codigo);
+    celdaId.append($('<input type="hidden">').attr('name', 'Id_Producto[]').val(codigo));
+    fila.append(celdaId);
     const campos = [
-        ['Id_Producto[]', codigo, '10%'],
-        ['Cantidad[]', cantidad, '10%'],
-        ['Descripcion[]', descripcion, '50%'],
-        ['Precio[]', precio.toFixed(2), '15%'],
-        ['Total[]', total.toFixed(2), '15%']
+        ['Cantidad[]', cantidad],
+        ['Descripcion[]', descripcion],
+        ['Precio[]', precio.toFixed(2)],
+        ['Total[]', total.toFixed(2)]
     ];
-    campos.forEach(([nombre, valor, ancho]) => {
-        const celda = $('<td></td>').css('width', ancho);
-        const entrada = $('<input type="hidden">')
-            .attr('name', nombre).val(valor);
-        celda.text(valor).append(entrada);
+    campos.forEach(([nombre, valor]) => {
+        const celda = $('<td></td>').text(valor);
+        const entrada = $('<input type="hidden">').attr('name', nombre).val(valor);
+        celda.append(entrada);
         fila.append(celda);
     });
 
@@ -140,8 +144,8 @@ function agregarProducto() {
     $('.tabla').append(fila);
     $('#vistaPreviaFactura').show();
     mostrarEstadoFactura('');
-    calcularTotales(total, Number($('#subtotalfact').val()) || 0);
     $('#codpro, #cantpro, #despro, #prepro, #totpro').val('');
+    actualizarTotalesFactura();
 }
 
 function mostrarEstadoFactura(mensaje) {
@@ -150,11 +154,17 @@ function mostrarEstadoFactura(mensaje) {
     estado.toggle(mensaje !== '');
 }
 
-function calcularTotales(total, subtotalActual) {
-    const nuevoSubtotal = Number((Number(subtotalActual) + Number(total)).toFixed(2));
-    const impuesto = Number((nuevoSubtotal * (15 / 100)).toFixed(2));
-    const granTotal = Number((nuevoSubtotal + impuesto).toFixed(2));
-    $('#subtotalfact').val(nuevoSubtotal.toFixed(2));
+function actualizarTotalesFactura() {
+    let subtotal = 0;
+    $('.factura-linea input[name="Total[]"]').each(function () {
+        const totalLinea = Number($(this).val());
+        if (Number.isFinite(totalLinea)) subtotal += totalLinea;
+    });
+
+    subtotal = Number(subtotal.toFixed(2));
+    const impuesto = Number((subtotal * 0.15).toFixed(2));
+    const granTotal = Number((subtotal + impuesto).toFixed(2));
+    $('#subtotalfact').val(subtotal.toFixed(2));
     $('#impuestofact').val(impuesto.toFixed(2));
     $('#todpagarfact').val(granTotal.toFixed(2));
 }

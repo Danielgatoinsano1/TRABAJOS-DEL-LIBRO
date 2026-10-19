@@ -3,7 +3,7 @@
 require_once 'manipularproductos.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['cguardar'])) {
-    header('Location: cproductos.php');
+    header('Location: cproductos.php?estado=guardado');
     exit;
 }
 
@@ -55,7 +55,7 @@ if (isset($_FILES['simagen']) && $_FILES['simagen']['error'] !== UPLOAD_ERR_NO_F
 
 try {
     (new modificarProducto($codigo, $nombre, $costo, $porcentaje, $precio, $fecha, $imagen))->guardar();
-    header('Location: cproductos.php?estado=guardado');
+    header('Location: cproductos.php');
 } catch (Throwable $e) {
     error_log('Error al guardar producto: ' . $e->getMessage());
     header('Location: cproductos.php?estado=' . ($e->getCode() === '23000' ? 'codigo_existe' : 'error'));

@@ -22,8 +22,8 @@ try {
     $conexion->beginTransaction();
 
     $ultimoNumero = (int) $conexion->query('SELECT COALESCE(MAX(nofactura), 999) FROM controlfactura')->fetchColumn();
-    if ($numeroFactura !== $ultimoNumero + 1) {
-        throw new DomainException('El número de factura cambió. Inicia una factura nueva y vuelve a intentarlo.');
+    if ($numeroFactura <= $ultimoNumero) {
+        throw new DomainException('El número de factura ya fue utilizado. Elige otro número.');
     }
 
     $cliente = $conexion->prepare('SELECT idcli FROM clientes WHERE idcli = :id');
@@ -98,6 +98,10 @@ try {
     if (isset($conexion) && $conexion->inTransaction()) {
         $conexion->rollBack();
     }
+    error_log('Error al guardar factura: ' . $error->getMessage());
     http_response_code(400);
-    echo htmlspecialchars($error instanceof DomainException ? $error->getMessage() : 'No se pudo guardar la factura.', ENT_QUOTES, 'UTF-8');
+    $mensaje = $error instanceof DomainException
+        ? $error->getMessage()
+        : 'No se pudo guardar la factura. Revisa los datos e inténtalo de nuevo.';
+    echo htmlspecialchars($mensaje, ENT_QUOTES, 'UTF-8');
 }

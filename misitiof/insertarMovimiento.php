@@ -82,5 +82,5 @@ if (
     }
 }
 
-header('Location: frmMovimiento.php?estado=guardado'); //Volver al formulario de inventario
+header('Location: frmMovimiento.php'); //Volver al formulario de inventario
 die();

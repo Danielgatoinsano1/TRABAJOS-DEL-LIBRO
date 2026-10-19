@@ -22,7 +22,7 @@ $consulta = $conexion->prepare(
      INNER JOIN inventario AS i ON i.Codigo = m.productoid
      INNER JOIN clientes AS c ON c.idcli = h.codclientefact
      WHERE m.facturano = :numero
-     ORDER BY m.idmovimientofact'
+     ORDER BY m.productoid'
 );
 $consulta->execute([':numero' => $numero]);
 $registros = $consulta->fetchAll(PDO::FETCH_ASSOC);

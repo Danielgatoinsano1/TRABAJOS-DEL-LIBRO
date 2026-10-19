@@ -14,7 +14,7 @@ if ($id === false) {
 
 try {
     (new modificarcliente($id, null, null, null, null, null))->eliminarCliente();
-    header('Location: frmcliente.php?estado=eliminado');
+    header('Location: frmcliente.php');
 } catch (Throwable $error) {
     error_log('Error al eliminar cliente: ' . $error->getMessage());
     header('Location: frmcliente.php?estado=error');

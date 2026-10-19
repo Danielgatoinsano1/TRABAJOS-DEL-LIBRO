@@ -10,8 +10,8 @@
             <a href="frmcliente.php" class="w3-bar-item w3-button">Clientes</a>
             <a href="frmMovimiento.php" class="w3-bar-item w3-button">Agregar inventario</a>
             <a href="frmFactura.php" class="w3-bar-item w3-button">Facturar</a>
-            <a href="facturasguardadas.php" class="w3-bar-item w3-button">Facturas guardadas</a>
-            <a href="frmLibros.php" class="w3-bar-item w3-button">Información libros</a>
+            <a href="index.php" class="w3-bar-item w3-button">Información de libros</a>
+            <a href="frmLibros.php#comentario" class="w3-bar-item w3-button">Comentarios de libros</a>
         </div>
     </div>
     <div class="w3-dropdown-click w3-mobile">
